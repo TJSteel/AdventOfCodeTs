@@ -1,0 +1,42 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "My Advent of Code challenge solutions",
+  "main": "utils.js",
+  "scripts": {
+    "prebuild": "tsc --build --clean",
+    "build": "tsc --build",
+    "lint-staged": "lint-staged",
+    "prestart": "npm run build",
+    "start": "tsc --watch",
+    "startJs": "nodemon dist\\core\\puzzleRunner.js",
+    "startJsAll": "nodemon dist\\core\\puzzleRunner.js -all",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "prettier": ".\\node_modules\\.bin\\prettier --write **/*.{md,js,ts,yaml,yml}",
+    "spell-check": ".\\node_modules\\.bin\\cspell  --cache --no-progress --color **/*.{md,js,ts,yaml,yml}"
+  },
+  "author": "TJSteel",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.5.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/node": "^16.11.12",
+    "chai": "^4.3.4",
+    "concurrently": "^6.3.0",
+    "cspell": "^5.12.6",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.4",
+    "prettier": "^2.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{json,ts,yaml,yml}": "prettier --write"
+  }
+}
