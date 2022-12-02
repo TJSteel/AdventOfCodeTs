@@ -1,5 +1,5 @@
-import { PuzzleStatus } from './enums';
-import { AbstractPuzzle } from './puzzle';
+import { PuzzleStatus } from '../core/enums';
+import { AbstractPuzzle } from '../core/puzzle';
 
 class Puzzle extends AbstractPuzzle {
   setAnswers(): void {
@@ -19,4 +19,4 @@ class Puzzle extends AbstractPuzzle {
   };
 }
 
-export const puzzle = new Puzzle('2022', 'Template', PuzzleStatus.IN_PROGRESS);
+export const puzzle = new Puzzle('Year', 'Day', PuzzleStatus.IN_PROGRESS);

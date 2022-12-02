@@ -4,20 +4,12 @@
   "version": "0.2",
   // language - current active spelling language
   "language": "en-GB",
-  "dictionaries": [
-    "typescript",
-    "node"
-  ],
+  "dictionaries": ["typescript", "node"],
   // words - list of words to be always considered correct
-  "words": [
-  ],
+  "words": ["prestart"],
   // flagWords - list of words to be always considered incorrect
   // This is useful for offensive words and common spelling errors.
   // For example "hte" should be "the"
   "flagWords": [],
-  "ignorePaths": [
-    "dist/**",
-    "node_modules/**",
-    "package-lock.json"
-  ]
+  "ignorePaths": ["dist/**", "node_modules/**", "package-lock.json"]
 }
