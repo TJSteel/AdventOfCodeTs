@@ -16,25 +16,41 @@ function getInput(q) {
 }
 
 async function buildFile() {
+  const today = new Date();
+  const yearToday = today.getFullYear();
   let year = 0;
   while (year == 0) {
-    const response = await getInput(`please enter a year: `);
+    const response = await getInput(`please enter a year between 2015-${yearToday}: (${yearToday}) `);
     const y = parseInt(response);
-    if (isNaN(y)) {
+    if (response == '') {
+      year = yearToday;
+    } else if (isNaN(y)) {
       console.log(`${response} is not a valid year!`);
+    } else if (y < 2015) {
+      console.log(`There are no advent of code challenges before 2015`);
+    } else if (y > yearToday) {
+      console.log(`You are not from the future`);
     } else {
       year = y;
     }
   }
-  let day = 0;
-  while (day == 0) {
-    const response = await getInput(`please enter a day: `);
+  const dayToday = today.getDate();
+  let day = '';
+  while (day == '') {
+    const response = await getInput(`please enter a day between 1-25: (${dayToday}) `);
     const d = parseInt(response);
-    if (isNaN(d)) {
+    if (response == '') {
+      day = `${dayToday}`;
+    } else if (isNaN(d)) {
       console.log(`${response} is not a valid day!`);
+    } else if (d < 1 || d > 25) {
+      console.log(`Advent of code challenges are only on days 1-25`);
     } else {
-      day = response.length == 1 ? `0${d}` : d;
+      day = `${d}`;
     }
+  }
+  if (day.length == 1) {
+    day = `0${day}`;
   }
 
   const dirs = [`./${year}`, `./${year}/input`, `./${year}/testInput`];
