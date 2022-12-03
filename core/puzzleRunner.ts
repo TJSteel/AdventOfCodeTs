@@ -4,8 +4,10 @@ import { logger } from './utils';
 const stats: any = {};
 const all = process.argv[2];
 const override = all == '-all';
-for (let year = 2021; year <= 2022; year++) {
-  for (let day = 1; day <= 31; day++) {
+const today = new Date();
+const yearToday = today.getFullYear();
+for (let year = 2015; year <= yearToday; year++) {
+  for (let day = 1; day <= 25; day++) {
     let dayStr = day < 10 ? `0${day}` : day;
     let puzzle = null;
     try {
