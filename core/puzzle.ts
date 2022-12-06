@@ -38,7 +38,7 @@ export abstract class AbstractPuzzle {
   }
 
   public parseInput(): void {
-    throw new Error('parseInput not implemented!');
+    // Optional method for additional parsing of input lines
   }
 
   private getInput = (folder: string): void => {
