@@ -11,11 +11,15 @@ class Puzzle extends AbstractPuzzle {
   }
 
   calculateAnswer1 = (): number => {
-    return this.input[0] + this.input[1];
+    let answer = 0;
+
+    return answer;
   };
 
   calculateAnswer2 = (): number => {
-    return this.input[0] * this.input[1];
+    let answer = 0;
+
+    return answer;
   };
 }
 
