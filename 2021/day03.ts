@@ -6,8 +6,6 @@ class Puzzle extends AbstractPuzzle {
     super.setAnswers(198, 3148794, 230, 2795310);
   }
 
-  parseInput(): void {}
-
   calculateAnswer1 = (): number => {
     let counts: number[] = [];
     let arrLenDiv2 = this.input.length / 2;

@@ -22,8 +22,6 @@ class Puzzle extends AbstractPuzzle {
     super.setAnswers(7, 1093, 19, 3534);
   }
 
-  parseInput(): void {}
-
   calculateAnswer1 = (): number => {
     return getPacketStart(this.input[0], 4);
   };

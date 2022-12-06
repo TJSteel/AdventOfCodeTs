@@ -9,8 +9,6 @@ class Puzzle extends AbstractPuzzle {
     super.setAnswers(26397, 469755, 288957, 2762335572);
   }
 
-  parseInput(): void {}
-
   calculateAnswer1 = (): number => {
     let points: any = {
       ')': 3,
