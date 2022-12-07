@@ -1,4 +1,5 @@
-import { Array2d, Coordinate } from '../core/array2d';
+import { Array2d } from '../core/array2d';
+import { Coordinate2d } from '../core/coordinate2d';
 import { PuzzleStatus } from '../core/enums';
 import { AbstractPuzzle } from '../core/puzzle';
 
@@ -6,7 +7,7 @@ class Puzzle extends AbstractPuzzle {
   private octopuses!: Array2d;
   private flashed!: Array2d;
   private flashes: number = 0;
-  private queue: Array<Coordinate> = [];
+  private queue: Array<Coordinate2d> = [];
 
   setAnswers(): void {
     super.setAnswers(1656, 1713, 195, 502);
@@ -23,7 +24,7 @@ class Puzzle extends AbstractPuzzle {
     });
   }
 
-  flash(coord: Coordinate) {
+  flash(coord: Coordinate2d) {
     this.flashed.setCell(coord, true);
     this.flashes++;
     for (let nCoord of this.octopuses.getNeighbours(coord)) {

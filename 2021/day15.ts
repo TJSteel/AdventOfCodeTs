@@ -1,10 +1,11 @@
-import { Array2d, Coordinate } from '../core/array2d';
+import { Array2d } from '../core/array2d';
+import { Coordinate2d } from '../core/coordinate2d';
 import { PuzzleStatus } from '../core/enums';
 import { AbstractPuzzle } from '../core/puzzle';
 
 interface Queue {
   cost: number;
-  coord: Coordinate;
+  coord: Coordinate2d;
 }
 
 class Puzzle extends AbstractPuzzle {
@@ -40,8 +41,8 @@ class Puzzle extends AbstractPuzzle {
     let nY = newMap.getHeight();
     for (let y = 0; y < oY; y++) {
       for (let x = oX; x < nX; x++) {
-        let cell = newMap.getCell({ x, y });
-        let offsetCell = newMap.getCell({ x: x - oX, y });
+        let cell = newMap.getCell(new Coordinate2d(x, y));
+        let offsetCell = newMap.getCell(new Coordinate2d(x - oX, y));
         cell.risk = offsetCell.risk + 1;
         if (cell.risk > 9) {
           cell.risk = 1;
@@ -50,8 +51,8 @@ class Puzzle extends AbstractPuzzle {
     }
     for (let y = oY; y < nY; y++) {
       for (let x = 0; x < nX; x++) {
-        let cell = newMap.getCell({ x, y });
-        let offsetCell = newMap.getCell({ x, y: y - oY });
+        let cell = newMap.getCell(new Coordinate2d(x, y));
+        let offsetCell = newMap.getCell(new Coordinate2d(x, y - oY));
         cell.risk = offsetCell.risk + 1;
         if (cell.risk > 9) {
           cell.risk = 1;
@@ -64,7 +65,7 @@ class Puzzle extends AbstractPuzzle {
   findBestPath(): number {
     let queue: Queue[] = [];
     let bestCost = (this.map.getWidth() + this.map.getHeight()) * 9;
-    let start = { x: 0, y: 0 };
+    let start = new Coordinate2d(0, 0);
     let end = { x: this.map.getWidth() - 1, y: this.map.getHeight() - 1 };
     this.map.getCell(start).cost = 0;
 

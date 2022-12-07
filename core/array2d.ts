@@ -1,17 +1,5 @@
+import { Coordinate2d } from './coordinate2d';
 import { logger } from './utils';
-
-export class Coordinate {
-  public x: number;
-  public y: number;
-
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-  toString = () => {
-    return `x: ${this.x}, y: ${this.y}`;
-  };
-}
 
 export class Array2d {
   public data: Array<any[]>;
@@ -20,27 +8,18 @@ export class Array2d {
   private width: number;
   private defaultValue: any;
   static neighboursAdjacent = [
-    { x: 0, y: -1 },
-    { x: -1, y: 0 },
-    { x: 1, y: 0 },
-    { x: 0, y: 1 },
+    new Coordinate2d(0, -1),
+    new Coordinate2d(-1, 0),
+    new Coordinate2d(1, 0),
+    new Coordinate2d(0, 1),
   ];
   static neighboursDiagonal = [
-    { x: -1, y: -1 },
-    { x: 1, y: -1 },
-    { x: -1, y: 1 },
-    { x: 1, y: 1 },
+    new Coordinate2d(-1, -1),
+    new Coordinate2d(1, -1),
+    new Coordinate2d(-1, 1),
+    new Coordinate2d(1, 1),
   ];
-  static neighbours = [
-    { x: -1, y: -1 },
-    { x: 0, y: -1 },
-    { x: 1, y: -1 },
-    { x: -1, y: 0 },
-    { x: 1, y: 0 },
-    { x: -1, y: 1 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-  ];
+  static neighbours = [...Array2d.neighboursAdjacent, ...Array2d.neighboursDiagonal];
 
   constructor(settings?: { width?: number; height?: number; defaultValue?: any; data?: [][] }) {
     this.width = settings?.width ? settings?.width : 0;
@@ -71,7 +50,7 @@ export class Array2d {
           value: done
             ? undefined
             : {
-                coord: new Coordinate(x, y),
+                coord: new Coordinate2d(x, y),
                 value: this.data[y][x++],
               },
         };
@@ -120,11 +99,11 @@ export class Array2d {
     return y >= 0 && y < this.height;
   }
 
-  public inRange(coord: Coordinate): boolean {
+  public inRange(coord: Coordinate2d): boolean {
     return this.inRangeX(coord.x) && this.inRangeY(coord.y);
   }
 
-  public getCell(coord: Coordinate): any {
+  public getCell(coord: Coordinate2d): any {
     if (this.inRange(coord)) {
       return this.data[coord.y][coord.x];
     } else {
@@ -132,7 +111,7 @@ export class Array2d {
     }
   }
 
-  public setCell(coord: Coordinate, value: any): void {
+  public setCell(coord: Coordinate2d, value: any): void {
     if (this.inRange(coord)) {
       this.data[coord.y][coord.x] = value;
     } else {
@@ -158,13 +137,10 @@ export class Array2d {
     }
   }
 
-  private _getNeighbours(coord: Coordinate, neighbourGroup: Array<Coordinate>): Array<Coordinate> {
-    let neighbours: Array<Coordinate> = [];
+  private _getNeighbours(coord: Coordinate2d, neighbourGroup: Array<Coordinate2d>): Array<Coordinate2d> {
+    let neighbours: Array<Coordinate2d> = [];
     neighbourGroup.forEach((n) => {
-      let nCoord: Coordinate = {
-        x: coord.x + n.x,
-        y: coord.y + n.y,
-      };
+      let nCoord: Coordinate2d = new Coordinate2d(coord.x + n.x, coord.y + n.y);
       if (this.getCell(nCoord) !== null) {
         neighbours.push(nCoord);
       }
@@ -172,15 +148,15 @@ export class Array2d {
     return neighbours;
   }
 
-  public getNeighbours(coord: Coordinate): Array<Coordinate> {
+  public getNeighbours(coord: Coordinate2d): Array<Coordinate2d> {
     return this._getNeighbours(coord, Array2d.neighbours);
   }
 
-  public getNeighboursAdjacent(coord: Coordinate): Array<Coordinate> {
+  public getNeighboursAdjacent(coord: Coordinate2d): Array<Coordinate2d> {
     return this._getNeighbours(coord, Array2d.neighboursAdjacent);
   }
 
-  public getNeighboursDiagonal(coord: Coordinate): Array<Coordinate> {
+  public getNeighboursDiagonal(coord: Coordinate2d): Array<Coordinate2d> {
     return this._getNeighbours(coord, Array2d.neighboursDiagonal);
   }
 

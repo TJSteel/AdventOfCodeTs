@@ -1,9 +1,10 @@
-import { Array2d, Coordinate } from '../core/array2d';
+import { Array2d } from '../core/array2d';
+import { Coordinate2d } from '../core/coordinate2d';
 import { PuzzleStatus } from '../core/enums';
 import { AbstractPuzzle } from '../core/puzzle';
 
 class Puzzle extends AbstractPuzzle {
-  coords: Coordinate[] = [];
+  coords: Coordinate2d[] = [];
   instructions: { direction: string; value: number }[] = [];
   map: Array2d = new Array2d();
   sizeX = 0;
@@ -40,7 +41,7 @@ class Puzzle extends AbstractPuzzle {
     this.sizeY = 0;
     while (this.input[i]) {
       let parts = this.input[i].split(',');
-      let coord = new Coordinate(parseInt(parts[0]), parseInt(parts[1]));
+      let coord = new Coordinate2d(parseInt(parts[0]), parseInt(parts[1]));
       this.coords.push(coord);
       if (coord.x > this.sizeX) {
         this.sizeX = coord.x;

@@ -1,10 +1,10 @@
-import { Coordinate } from '../core/array2d';
+import { Coordinate2d } from '../core/coordinate2d';
 import { PuzzleStatus } from '../core/enums';
 import { AbstractPuzzle } from '../core/puzzle';
 import { tjMath } from '../core/utils';
 
 class Puzzle extends AbstractPuzzle {
-  target: { from: Coordinate; to: Coordinate } = { from: new Coordinate(0, 0), to: new Coordinate(0, 0) };
+  target: { from: Coordinate2d; to: Coordinate2d } = { from: new Coordinate2d(0, 0), to: new Coordinate2d(0, 0) };
 
   setAnswers(): void {
     super.setAnswers(45, 6441, 112, 3186);
@@ -24,8 +24,8 @@ class Puzzle extends AbstractPuzzle {
     x = x.sort((a: number, b: number) => a - b);
     y = y.sort((a: number, b: number) => b - a);
     this.target = {
-      from: new Coordinate(x[0], y[0]),
-      to: new Coordinate(x[1], y[1]),
+      from: new Coordinate2d(x[0], y[0]),
+      to: new Coordinate2d(x[1], y[1]),
     };
   }
 
