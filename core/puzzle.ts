@@ -63,35 +63,43 @@ export abstract class AbstractPuzzle {
     throw new Error('calculateAnswer2 not implemented!');
   }
 
-  private runner = (name: string, getInput: Function, calculateAnswer: Function, answer: number) => {
+  private runner = (name: string, getInput: Function, calculateAnswer: Function, answer: number): boolean => {
     if (answer === -1) {
       logger.logColor(
         `${this.year} day ${this.day} ${name} skipping (because answer is ${answer})`,
         logger.color.YELLOW
       );
-      return;
+      return true;
     }
     logger.logColor(`${this.year} day ${this.day} ${name} running`, logger.color.YELLOW);
     getInput();
     let start = process.hrtime();
-    this.parseInput();
-    let calculatedAnswer = calculateAnswer();
+    let calculatedAnswer = null;
+    try {
+      this.parseInput();
+      calculatedAnswer = calculateAnswer();
+    } catch (err) {
+      console.log(err);
+    }
     let end = process.hrtime(start);
 
     logger.log(
       `${logger.getColor(`${this.year} day ${this.day} ${name} answer: `, logger.color.CYAN)}${
-        calculatedAnswer == answer
+        calculatedAnswer === answer
           ? logger.getColor(calculatedAnswer, logger.color.GREEN)
           : logger.getColor(`${calculatedAnswer} != ${answer}`, logger.color.RED)
       }`
     );
     logger.logColor(`${this.year} day ${this.day} ${name} took: ${end[0]}s ${end[1] / 1000000}ms`, logger.color.CYAN);
+    return calculatedAnswer === answer;
   };
 
-  public run = () => {
-    this.runner(`Test 1`, this.getTestInput, this.calculateAnswer1, this.answers.test1);
-    this.runner(`Main 1`, this.getMainInput, this.calculateAnswer1, this.answers.main1);
-    this.runner(`Test 2`, this.getTestInput, this.calculateAnswer2, this.answers.test2);
-    this.runner(`Main 2`, this.getMainInput, this.calculateAnswer2, this.answers.main2);
+  public run = (): number => {
+    let errors = 0;
+    errors += this.runner(`Test 1`, this.getTestInput, this.calculateAnswer1, this.answers.test1) ? 0 : 1;
+    errors += this.runner(`Main 1`, this.getMainInput, this.calculateAnswer1, this.answers.main1) ? 0 : 1;
+    errors += this.runner(`Test 2`, this.getTestInput, this.calculateAnswer2, this.answers.test2) ? 0 : 1;
+    errors += this.runner(`Main 2`, this.getMainInput, this.calculateAnswer2, this.answers.main2) ? 0 : 1;
+    return errors;
   };
 }
