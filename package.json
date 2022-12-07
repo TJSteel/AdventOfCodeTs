@@ -2,7 +2,6 @@
   "name": "advent-of-code",
   "version": "1.0.0",
   "description": "My Advent of Code challenge solutions",
-  "main": "utils.js",
   "scripts": {
     "newDay": "node newDay.js",
     "prebuild": "tsc --build --clean",
