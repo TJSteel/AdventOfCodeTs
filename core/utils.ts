@@ -28,4 +28,7 @@ export const tjMath = {
   triangleNumber: (val: number): number => {
     return (val * (val + 1)) / 2;
   },
+  degreesToRadians(degrees: number): number {
+    return (degrees * Math.PI) / 180;
+  },
 };

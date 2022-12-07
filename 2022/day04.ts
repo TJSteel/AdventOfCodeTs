@@ -30,7 +30,7 @@ class ElfPair {
 class Puzzle extends AbstractPuzzle {
   elfPairs: ElfPair[] = [];
   setAnswers(): void {
-    super.setAnswers(2, 464, 4, 0);
+    super.setAnswers(2, 464, 4, 770);
   }
 
   parseInput(): void {
