@@ -26,4 +26,8 @@ export class Coordinate2d {
     const radians = tjMath.degreesToRadians(degrees);
     this.rotate(radians);
   }
+
+  equals(coord: Coordinate2d) {
+    return this.x == coord.x && this.y == coord.y;
+  }
 }
