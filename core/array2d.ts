@@ -44,19 +44,22 @@ export class Array2d {
           x = 0;
           y++;
         }
-        let done = y == this.height;
+        if (y == this.height) {
+          return {
+            done: true,
+            value: {
+              coord: new Coordinate2d(0, 0),
+              value: this.data[0][0],
+            },
+          };
+        }
         return {
-          done,
-          value: done
-            ? undefined
-            : {
-                coord: new Coordinate2d(x, y),
-                value: this.data[y][x++],
-              },
+          done: false,
+          value: {
+            coord: new Coordinate2d(x, y),
+            value: this.data[y][x++],
+          },
         };
-      },
-      return: () => {
-        return { value: undefined, done: true };
       },
     };
   }
