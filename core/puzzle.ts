@@ -11,6 +11,7 @@ export abstract class AbstractPuzzle {
     test2: any;
     main2: any;
   };
+  private testInputOnly: boolean = false;
   protected input: any[];
   public status: PuzzleStatus;
 
@@ -28,13 +29,14 @@ export abstract class AbstractPuzzle {
     this.status = status;
   }
 
-  public setAnswers(test1: any, main1: any, test2: any, main2: any): void {
+  public setAnswers(test1: any, main1: any, test2: any, main2: any, testInputOnly: boolean = false): void {
     this.answers = {
       test1: test1,
       main1: main1,
       test2: test2,
       main2: main2,
     };
+    this.testInputOnly = testInputOnly;
   }
 
   public parseInput(): void {
@@ -97,9 +99,13 @@ export abstract class AbstractPuzzle {
   public run = (): number => {
     let errors = 0;
     errors += this.runner(`Test 1`, this.getTestInput, this.calculateAnswer1, this.answers.test1) ? 0 : 1;
-    errors += this.runner(`Main 1`, this.getMainInput, this.calculateAnswer1, this.answers.main1) ? 0 : 1;
+    if (!this.testInputOnly) {
+      errors += this.runner(`Main 1`, this.getMainInput, this.calculateAnswer1, this.answers.main1) ? 0 : 1;
+    }
     errors += this.runner(`Test 2`, this.getTestInput, this.calculateAnswer2, this.answers.test2) ? 0 : 1;
-    errors += this.runner(`Main 2`, this.getMainInput, this.calculateAnswer2, this.answers.main2) ? 0 : 1;
+    if (!this.testInputOnly) {
+      errors += this.runner(`Main 2`, this.getMainInput, this.calculateAnswer2, this.answers.main2) ? 0 : 1;
+    }
     return errors;
   };
 }
