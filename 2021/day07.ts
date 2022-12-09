@@ -24,7 +24,6 @@ class Puzzle extends AbstractPuzzle {
       let total = 0;
       this.input.forEach((num) => {
         total += Math.abs(num - i);
-        // console.log(`num: ${num}, i: ${i}, abs: ${Math.abs(num - i)}`);
       });
       if (total < minTotal) {
         pos = i;
@@ -42,7 +41,6 @@ class Puzzle extends AbstractPuzzle {
       this.input.forEach((num) => {
         let distance = Math.abs(num - i);
         total += (distance * (distance + 1)) / 2;
-        // console.log(`num: ${num}, i: ${i}, abs: ${Math.abs(num - i)}`);
       });
       if (total < minTotal) {
         pos = i;
