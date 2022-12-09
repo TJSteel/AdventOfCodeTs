@@ -35,7 +35,7 @@ class Puzzle extends AbstractPuzzle {
       this.str += ']';
     }
     if (!node.parent) {
-      console.log(this.str);
+      console.info(this.str);
     }
   }
 

@@ -12,10 +12,10 @@ const getColor = (str: string, color: string): string => {
   return `\u001b[${color}m${str}\u001b[0m`;
 };
 const logColor = (str: string, color: string = '37'): void => {
-  console.log(getColor(str, color));
+  console.info(getColor(str, color));
 };
 const log = (str: string): void => {
-  console.log(str);
+  console.info(str);
 };
 export const logger: any = {
   color,
