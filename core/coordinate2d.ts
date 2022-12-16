@@ -30,4 +30,8 @@ export class Coordinate2d {
   equals(coord: Coordinate2d) {
     return this.x == coord.x && this.y == coord.y;
   }
+
+  manhattanDistance(coord: Coordinate2d) {
+    return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
+  }
 }

@@ -14,6 +14,7 @@ export abstract class AbstractPuzzle {
   private testInputOnly: boolean = false;
   protected input: any[];
   public status: PuzzleStatus;
+  public isTest: boolean = false;
 
   /**
    * Creates a new puzzle for the corresponding year / day
@@ -66,6 +67,7 @@ export abstract class AbstractPuzzle {
   }
 
   private runner = (name: string, getInput: Function, calculateAnswer: Function, answer: number): boolean => {
+    this.isTest = name.includes('Test');
     if (answer === -1) {
       logger.logColor(
         `${this.year} day ${this.day} ${name} skipping (because answer is ${answer})`,
