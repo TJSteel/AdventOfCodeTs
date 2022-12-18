@@ -53,7 +53,7 @@ async function buildFile() {
     day = `0${day}`;
   }
 
-  const dirs = [`./${year}`, `./${year}/input`, `./${year}/testInput`];
+  const dirs = [`./${year}`, `./${year}/${day}`, `./${year}/${day}/input`];
   for (const dir of dirs) {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
@@ -61,7 +61,7 @@ async function buildFile() {
     }
   }
 
-  const templateFile = `./template/dayTemplate.ts`;
+  const templateFile = `./template/dayTemplate/puzzle.ts`;
   const dayFile = `./${year}/day${day}.ts`;
 
   if (fs.existsSync(dayFile)) {
