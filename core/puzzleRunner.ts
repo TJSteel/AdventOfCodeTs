@@ -12,7 +12,7 @@ for (let year = 2015; year <= yearToday; year++) {
     let dayStr = day < 10 ? `0${day}` : day;
     let puzzle = null;
     try {
-      puzzle = require(`../${year}/day${dayStr}`).puzzle;
+      puzzle = require(`../${year}/day${dayStr}/puzzle`).puzzle;
     } catch (err) {
       continue;
     }

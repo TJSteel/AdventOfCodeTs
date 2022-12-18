@@ -44,8 +44,8 @@ export abstract class AbstractPuzzle {
     // Optional method for additional parsing of input lines
   }
 
-  private getInput = (folder: string): void => {
-    this.input = readFileSync(`${this.year}/${folder}/day${this.day}.txt`, {
+  private getInput = (inputFile: string): void => {
+    this.input = readFileSync(`${this.year}/day${this.day}/input/${inputFile}.txt`, {
       encoding: 'utf-8',
     }).split('\r\n');
   };
