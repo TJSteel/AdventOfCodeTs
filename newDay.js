@@ -53,7 +53,10 @@ async function buildFile() {
     day = `0${day}`;
   }
 
-  const dirs = [`./${year}`, `./${year}/${day}`, `./${year}/${day}/input`];
+  const yearDir = `./${year}`;
+  const dayDir = `${yearDir}/day${day}`;
+  const inputDir = `${dayDir}/input`;
+  const dirs = [yearDir, dayDir, inputDir];
   for (const dir of dirs) {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
@@ -62,7 +65,7 @@ async function buildFile() {
   }
 
   const templateFile = `./template/dayTemplate/puzzle.ts`;
-  const dayFile = `./${year}/day${day}.ts`;
+  const dayFile = `${dayDir}/puzzle.ts`;
 
   if (fs.existsSync(dayFile)) {
     console.log(`${dayFile} already exists!`);
@@ -81,7 +84,7 @@ async function buildFile() {
     console.log(`${dayFile} created successfully!`);
   }
 
-  const inputFiles = [`./${year}/input/day${day}.txt`, `./${year}/testInput/day${day}.txt`];
+  const inputFiles = [`${inputDir}/input.txt`, `${inputDir}/testInput.txt`];
   for (const inputFile of inputFiles) {
     if (fs.existsSync(inputFile)) {
       console.log(`${inputFile} already exists!`);
