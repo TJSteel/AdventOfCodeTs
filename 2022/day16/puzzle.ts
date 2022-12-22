@@ -1,29 +1,8 @@
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
-
-class Valve {
-  id: string;
-  flowRate: number;
-  paths: string[];
-  pathCosts: Map<string, number>;
-  constructor(id: string, flowRate: number, paths: string[], pathCosts?: Map<string, number>) {
-    this.id = id;
-    this.flowRate = flowRate;
-    this.paths = paths;
-    this.pathCosts = pathCosts ? pathCosts : new Map();
-  }
-
-  copy(): Valve {
-    return new Valve(this.id, this.flowRate, this.paths, this.pathCosts);
-  }
-}
-
-interface Queue {
-  valve: Valve;
-  valves: Map<string, Valve>;
-  minute: number;
-  pressure: number;
-}
+import { Elf } from './elf';
+import { getStateString, State } from './interfaces';
+import { Valve } from './valve';
 
 function copyValves(valves: Map<string, Valve>): Map<string, Valve> {
   const map = new Map();
@@ -33,9 +12,12 @@ function copyValves(valves: Map<string, Valve>): Map<string, Valve> {
 
 class Puzzle extends AbstractPuzzle {
   valves: Map<string, Valve> = new Map();
+  memoization: Map<string, number> = new Map();
+  elfCount: number = 0;
+  maxPressure: number = 0;
 
   setAnswers(): void {
-    super.setAnswers(1651, 1775, 0, 0);
+    super.setAnswers(1651, 1775, 1707, 0, { testInputOnly: false });
   }
 
   parseInput(): void {
@@ -53,104 +35,87 @@ class Puzzle extends AbstractPuzzle {
       const paths = parts[2].includes(',') ? parts[2].split(', ') : [parts[2]];
       this.valves.set(id, new Valve(id, flowRate, paths));
     });
-    this.getPathLengths();
+    Valve.setPathLengths(this.valves);
+    this.memoization = new Map();
+    this.maxPressure;
   }
 
-  getPathLengths() {
-    this.valves.forEach((valveFrom) => {
-      this.valves.forEach((valveTo) => {
-        if (valveFrom.id !== valveTo.id) {
-          valveFrom.pathCosts.set(valveTo.id, this.getPathLength(valveFrom, valveTo));
-        }
-      });
-    });
+  getMaxPressure(p1: number, p2: number): number {
+    const max = Math.max(p1, p2);
+    this.maxPressure = Math.max(this.maxPressure, max);
+    return max;
   }
 
-  getPathLength(from: Valve, to: Valve): number {
-    const queue = [];
-    for (const path of from.paths) {
-      queue.push({ id: path, length: 0, visited: [] });
+  getHighestPressure(totalMinutes: number): number {
+    this.memoization = new Map();
+    const elves: Elf[] = [];
+    for (let i = 0; i < this.elfCount; i++) {
+      elves.push(new Elf('AA', totalMinutes));
     }
-    while (queue.length > 0) {
-      const current: any = queue.shift()!;
-      current.length++;
-      if (current.id == to.id) {
-        return current.length;
-      }
-      const next: Valve = this.valves.get(current.id)!;
-      for (const path of next.paths) {
-        if (!current.visited.includes(path)) {
-          queue.push({ id: path, length: current.length, visited: [...current.visited, path] });
-        }
-      }
-    }
-    return 0;
+    const valves = copyValves(this.valves);
+
+    const state: State = {
+      elves,
+      valves,
+      pressure: 0,
+    };
+    return this.getHighestPressureDFS(state);
   }
 
-  calculateAnswer1 = (): number => {
-    let highestPressure = 0;
-    const startValve = this.valves.get('AA')!;
-    const queue: Queue[] = [];
-    startValve.pathCosts.forEach((length, id) => {
-      const valveTo: Valve = this.valves.get(id)!;
-      if (valveTo.flowRate == 0) {
-        return;
-      }
-      const valves = copyValves(this.valves);
-      const valve = valves.get(id)!;
-      const minute = 30 - length;
-      queue.push({
-        valve,
-        valves,
-        minute,
-        pressure: 0,
-      });
-    });
+  getHighestPressureDFS(state: State): number {
+    const stateString = getStateString(state);
+    if (!this.memoization.has(stateString)) {
+      this.memoization.set(stateString, this._getHighestPressureDFS(state));
+    }
+    return this.memoization.get(stateString)!;
+  }
 
-    let pathsChecked = 0;
-    while (queue.length > 0) {
-      pathsChecked++;
-      const current: Queue = queue.pop()!;
+  _getHighestPressureDFS(state: State): number {
+    const newStates: State[] = [];
 
-      current.minute--;
-      current.pressure += current.valve.flowRate * current.minute;
-      current.valve.flowRate = 0;
-      highestPressure = Math.max(highestPressure, current.pressure);
-
-      if (current.minute <= 0) {
+    for (let i = 0; i < this.elfCount; i++) {
+      const elf: Elf = state.elves[i];
+      if (!elf.hasMoves(state.valves)) {
         continue;
       }
-      let remainingFlowRates = 0;
-      current.valves.forEach((value) => (remainingFlowRates += value.flowRate));
-      const potentialExtraPressure = remainingFlowRates * current.minute;
-      if (current.pressure + potentialExtraPressure < highestPressure) {
-        continue;
-      }
+      const valve: Valve = state.valves.get(elf.valveId)!;
 
-      current.valve.pathCosts.forEach((length, id) => {
-        const valveTo = current.valves.get(id);
-        if (valveTo!.flowRate == 0) {
+      valve.pathCosts.forEach((pathLength, pathValveId) => {
+        const valveTo = state.valves.get(pathValveId)!;
+
+        if (valveTo.flowRate == 0) {
           return;
         }
-        const valves = copyValves(current.valves);
-        const valve = valves.get(id)!;
+        const elves = state.elves.map((elf) => elf.copy());
+        const valves = copyValves(state.valves);
+        const valve = valves.get(pathValveId)!;
 
-        queue.push({
-          valve,
+        const elf = elves[i];
+        const pressure = state.pressure + elf.openValve(valve, pathLength);
+        newStates.push({
+          elves,
           valves,
-          minute: current.minute - length,
-          pressure: current.pressure,
+          pressure,
         });
       });
     }
-    return highestPressure;
+
+    for (const newState of newStates) {
+      state.pressure = this.getMaxPressure(state.pressure, this.getHighestPressureDFS(newState));
+    }
+
+    return state.pressure;
+  }
+
+  calculateAnswer1 = (): number => {
+    this.elfCount = 1;
+    return this.getHighestPressure(30);
   };
 
   calculateAnswer2 = (): number => {
-    let answer = 0;
-
-    return answer;
+    this.elfCount = 2;
+    return this.getHighestPressure(26);
   };
 }
 
-export const puzzle = new Puzzle('2022', '16', PuzzleStatus.NOT_SOLVED);
+export const puzzle = new Puzzle('2022', '16', PuzzleStatus.IN_PROGRESS);
