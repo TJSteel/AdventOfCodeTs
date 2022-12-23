@@ -19,6 +19,12 @@ export class Coordinate2d {
     return this;
   }
 
+  subtract(coord: Coordinate2d): Coordinate2d {
+    this.x -= coord.x;
+    this.y -= coord.y;
+    return this;
+  }
+
   toString(): string {
     return `x: ${this.x}, y: ${this.y}`;
   }
