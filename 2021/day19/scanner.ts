@@ -7,6 +7,7 @@ export class Scanner {
   rotation: number = -1;
   beacons: Beacon[] = [];
   beaconCoords: Coordinate3d[] | null = null;
+  beaconDistances: number[][] = [];
   duplicate: boolean = false;
 
   constructor(id: number) {
@@ -20,8 +21,23 @@ export class Scanner {
     if (this.rotation > -1) {
       throw new Error(`already calculated scanner ${this.id}`);
     }
+    const sCoords = scanner.beaconCoords!;
+    // pre check before going through all orientations
+    let maxOverlap = 0;
+    for (let t = 0, tLen = this.beaconDistances.length; t < tLen; t++) {
+      for (let s = 0, sLen = scanner.beaconDistances.length; s < sLen; s++) {
+        const tDistances = this.beaconDistances[t];
+        const sDistances = scanner.beaconDistances[s];
+        const beaconDistanceCount = tDistances.filter((tD) => sDistances.includes(tD)).length;
+        if (beaconDistanceCount > maxOverlap) {
+          maxOverlap = beaconDistanceCount;
+        }
+      }
+    }
+    if (maxOverlap < minOverlap) {
+      return;
+    }
 
-    const sCoords = scanner.beaconCoords ? scanner.beaconCoords : scanner.beacons.map((s) => s.coords[0]);
     // try each possible rotation
     for (let rotation = 0; rotation < 24; rotation++) {
       const tCoords = this.beacons.map((t) => t.coords[rotation]);
@@ -42,17 +58,32 @@ export class Scanner {
                 this.beaconCoords.push(newSCoord);
               }
             }
+            this.updateBeaconDistances();
 
             if (this.id < scanner.id) {
               scanner.duplicate = true;
             } else {
               this.duplicate = true;
               scanner.beaconCoords = this.beaconCoords;
+              scanner.updateBeaconDistances();
             }
             return;
           }
         }
       }
+    }
+  }
+
+  updateBeaconDistances() {
+    this.beaconDistances = [];
+    let i = 0;
+    const coords = this.beaconCoords ? this.beaconCoords : this.beacons.map((b) => b.coords[0]);
+    for (const coordA of coords) {
+      this.beaconDistances[i] = [];
+      for (const coordB of coords) {
+        this.beaconDistances[i].push(coordA.manhattanDistance(coordB));
+      }
+      i++;
     }
   }
 }

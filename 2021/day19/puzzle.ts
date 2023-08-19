@@ -9,7 +9,7 @@ class Puzzle extends AbstractPuzzle {
   scanners: Scanner[] = [];
   knownBeacons: Coordinate3d[] = [];
   setAnswers(): void {
-    super.setAnswers(79, 483, -1, -1);
+    super.setAnswers(79, 483, 3621, 14804);
   }
 
   parseInput(): void {
@@ -34,6 +34,9 @@ class Puzzle extends AbstractPuzzle {
     this.rootScanner.coord = new Coordinate3d(0, 0, 0);
     this.rootScanner.rotation = 0;
     this.rootScanner.beaconCoords = this.rootScanner.beacons.map((b) => b.coords[0]);
+    for (const scanner of this.scanners) {
+      scanner.updateBeaconDistances();
+    }
   }
 
   calculateScanners() {
@@ -42,12 +45,11 @@ class Puzzle extends AbstractPuzzle {
     let scannersUpdated = true;
     while (scannersUpdated) {
       scannersUpdated = false;
-      scannerLoop: for (const scanner of unresolvedScanners) {
+      for (const scanner of unresolvedScanners) {
         for (const resolvedScanner of resolvedScanners) {
           scanner.calculatePosition(resolvedScanner, 12);
           if (scanner.coord !== null) {
             scannersUpdated = true;
-            continue scannerLoop;
           }
         }
       }
@@ -64,21 +66,16 @@ class Puzzle extends AbstractPuzzle {
   calculateAnswer2 = (): number => {
     this.calculateScanners();
     let answer = 0;
-    for (const beaconA of this.rootScanner.beaconCoords!) {
-      for (const beaconB of this.rootScanner.beaconCoords!) {
-        const distance = beaconA.manhattanDistance(beaconB);
+    for (const scannerA of this.scanners) {
+      for (const scannerB of this.scanners) {
+        const distance = scannerA.coord!.manhattanDistance(scannerB.coord!);
         if (distance > answer) {
           answer = distance;
         }
       }
     }
-
-    console.log(
-      `manhattan: ${new Coordinate3d(1105, -1205, 1229).manhattanDistance(new Coordinate3d(-92, -2380, -20))}`
-    );
-
     return answer;
   };
 }
 
-export const puzzle = new Puzzle('2021', '19', PuzzleStatus.IN_PROGRESS);
+export const puzzle = new Puzzle('2021', '19', PuzzleStatus.INEFFICIENT);
