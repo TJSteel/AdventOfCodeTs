@@ -26,6 +26,11 @@ export class Array2d {
     this.height = settings?.height ? settings?.height : 0;
     this.defaultValue = settings?.defaultValue !== null ? settings?.defaultValue : null;
 
+    if (settings?.data) {
+      this.width = settings.data[0].length;
+      this.height = settings.data.length;
+    }
+
     this.data = [];
     for (let y = 0; y < this.height; y++) {
       this.data.push([]);
