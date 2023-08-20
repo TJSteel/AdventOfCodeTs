@@ -14,4 +14,12 @@ export class Player {
     }
     this.points += this.position;
   }
+  getState() {
+    return `${this.position},${this.points}`;
+  }
+  loadState(state: string) {
+    const parts = state.split(',');
+    this.position = parseInt(parts[0]);
+    this.points = parseInt(parts[1]);
+  }
 }

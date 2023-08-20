@@ -5,7 +5,7 @@ import { DiracDice } from './diracDice';
 class Puzzle extends AbstractPuzzle {
   game!: DiracDice;
   setAnswers(): void {
-    super.setAnswers(739785, 853776, -1, -1);
+    super.setAnswers(739785, 853776, 444356092776315, -1);
   }
 
   parseInput(): void {
@@ -24,9 +24,9 @@ class Puzzle extends AbstractPuzzle {
   };
 
   calculateAnswer2 = (): number => {
-    let answer = 0;
+    this.game = new DiracDice(this.input[0], this.input[1], 21);
 
-    return answer;
+    return this.game.getMostWins();
   };
 }
 
