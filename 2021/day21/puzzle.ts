@@ -1,3 +1,4 @@
+import { count } from 'console';
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
 import { DiracDice } from './diracDice';
@@ -25,8 +26,9 @@ class Puzzle extends AbstractPuzzle {
 
   calculateAnswer2 = (): number => {
     this.game = new DiracDice(this.input[0], this.input[1], 21);
-
-    return this.game.getMostWins();
+    const outcome = this.game.getMostWins({ player1: 0, player2: 0, count: 1 }, this.game.getState());
+    console.log(DiracDice.winFunctionCounts);
+    return outcome.player1 > outcome.player2 ? outcome.player1 : outcome.player2;
   };
 }
 

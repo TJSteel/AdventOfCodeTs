@@ -1,7 +1,7 @@
 import { DeterministicDice } from './deterministicDice';
 import { Player } from './player';
 
-interface Memoization {
+interface Outcome {
   player1: number;
   player2: number;
   count: number;
@@ -11,13 +11,22 @@ interface DiceOutcome {
   count: number;
 }
 
+const diceOutcomes: DiceOutcome[] = [
+  { score: 3, count: 1 },
+  { score: 4, count: 3 },
+  { score: 5, count: 6 },
+  { score: 6, count: 7 },
+  { score: 7, count: 6 },
+  { score: 8, count: 3 },
+  { score: 9, count: 1 },
+];
 export class DiracDice {
   private player1: Player;
   private player2: Player;
   private player1MoveNext: boolean = true;
   private maxScore: number;
-  private gameOver: boolean = false;
   private debug: boolean = false;
+  public static winFunctionCounts = 0;
   dice: DeterministicDice = new DeterministicDice(100);
 
   constructor(player1Position: number, player2Position: number, maxScore: number) {
@@ -26,62 +35,34 @@ export class DiracDice {
     this.maxScore = maxScore;
   }
 
-  getMostWins(): number {
-    const diceOutcomes: DiceOutcome[] = [
-      { score: 3, count: 1 },
-      { score: 4, count: 3 },
-      { score: 5, count: 6 },
-      { score: 6, count: 7 },
-      { score: 7, count: 6 },
-      { score: 8, count: 3 },
-      { score: 9, count: 1 },
-    ];
-    const memoization = new Map<string, Memoization>();
-    const winStates: Set<string> = new Set();
-    const queue: string[] = [];
-    // build search queue
-    const rootState = this.getState();
-    memoization.set(rootState, { player1: 0, player2: 0, count: 1 });
-    queue.push(rootState);
-    let player1Wins = 0;
-    let player2Wins = 0;
+  getMostWins(previousOutcome: Outcome, state: string): Outcome {
+    DiracDice.winFunctionCounts++;
+    const outcome = { ...previousOutcome };
 
-    // play all possible games to build memoized score
-    while (queue.length > 0) {
-      const previousState = queue.shift()!;
-      for (const outcome of diceOutcomes) {
-        this.loadState(previousState);
-        this.playMove(outcome.score);
-        const currentState = this.getState();
-
-        const memo: Memoization = { ...memoization.get(previousState)! };
-        memo.count *= outcome.count;
-
-        if (memoization.has(currentState)) {
-          memoization.get(currentState)!.count += memo.count; // TODO maybe even a *= here
-        }
-
-        memoization.set(currentState, memo);
-        if (this.isGameOver()) {
-          winStates.add(currentState);
-          if (this.getWinner().name == 'Player 1') {
-            player1Wins += memo.count;
-          } else {
-            player2Wins += memo.count;
-          }
-        } else {
-          queue.push(currentState);
-        }
+    this.loadState(state);
+    if (this.isGameOver()) {
+      if (this.getWinner().name == 'Player 1') {
+        outcome.player1 += outcome.count;
+      } else {
+        outcome.player2 += outcome.count;
       }
+      return outcome;
     }
+    for (const diceOutcome of diceOutcomes) {
+      let nodeOutcome = { ...previousOutcome };
+      this.loadState(state);
+      this.playMove(diceOutcome.score);
+      nodeOutcome.count *= diceOutcome.count;
+      nodeOutcome = this.getMostWins(nodeOutcome, this.getState());
 
-    console.log(player1Wins);
-    console.log(player2Wins);
-    return Math.max(player1Wins, player2Wins);
+      outcome.player1 += nodeOutcome.player1;
+      outcome.player2 += nodeOutcome.player2;
+    }
+    return outcome;
   }
 
   isGameOver() {
-    return this.gameOver;
+    return this.player1.points >= this.maxScore || this.player2.points >= this.maxScore;
   }
   playMove(forcedRollScore?: number) {
     let diceScore: number = 0;
@@ -96,9 +77,7 @@ export class DiracDice {
     player.move(diceScore);
     if (this.debug)
       console.log(`${player.name} moved ${diceScore} to ${player.position} increasing their score to ${player.points}`);
-    if (player.points >= this.maxScore) {
-      this.gameOver = true;
-    }
+
     this.player1MoveNext = !this.player1MoveNext;
   }
   getWinner() {
