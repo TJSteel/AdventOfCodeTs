@@ -1,5 +1,9 @@
+require('dotenv').config();
 const fs = require('fs');
 const readline = require('readline');
+const axios = require('axios').default;
+
+const sessionToken = process.env.sessionToken;
 
 function getInput(q) {
   const rl = readline.createInterface({
@@ -84,14 +88,35 @@ async function buildFile() {
     console.log(`${dayFile} created successfully!`);
   }
 
-  const inputFiles = [`${inputDir}/input.txt`, `${inputDir}/testInput.txt`];
-  for (const inputFile of inputFiles) {
-    if (fs.existsSync(inputFile)) {
-      console.log(`${inputFile} already exists!`);
-    } else {
-      fs.writeFileSync(inputFile, '', { encoding: 'utf-8' });
-      console.log(`${inputFile} created successfully!`);
+  const inputFile = `${inputDir}/input.txt`;
+  if (fs.existsSync(inputFile)) {
+    console.log(`${inputFile} already exists!`);
+  } else {
+    let data = '';
+    if (sessionToken) {
+      const response = await axios.get(`https://adventofcode.com/${year}/day/${day}/input`, {
+        headers: { Cookie: `session=${sessionToken}` },
+      });
+      if (response.status === 200) {
+        data = response.data.split('\n');
+        while (data[data.length - 1] == '') {
+          data.pop();
+        }
+        data = data.join('\r\n');
+      } else {
+        console.error(response);
+      }
     }
+    fs.writeFileSync(inputFile, data, { encoding: 'utf-8' });
+    console.log(`${inputFile} created successfully!`);
+  }
+
+  const testInputFile = `${inputDir}/testInput.txt`;
+  if (fs.existsSync(testInputFile)) {
+    console.log(`${testInputFile} already exists!`);
+  } else {
+    fs.writeFileSync(testInputFile, '', { encoding: 'utf-8' });
+    console.log(`${testInputFile} created successfully!`);
   }
 }
 
