@@ -1,4 +1,3 @@
-import { count } from 'console';
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
 import { DiracDice } from './diracDice';
@@ -6,7 +5,7 @@ import { DiracDice } from './diracDice';
 class Puzzle extends AbstractPuzzle {
   game!: DiracDice;
   setAnswers(): void {
-    super.setAnswers(739785, 853776, 444356092776315, -1);
+    super.setAnswers(739785, 853776, 444356092776315, 301304993766094);
   }
 
   parseInput(): void {
@@ -31,5 +30,5 @@ class Puzzle extends AbstractPuzzle {
     return outcome.player1 > outcome.player2 ? outcome.player1 : outcome.player2;
   };
 }
-
-export const puzzle = new Puzzle('2021', '21', PuzzleStatus.IN_PROGRESS);
+// takes almost 10 mins to solve
+export const puzzle = new Puzzle('2021', '21', PuzzleStatus.INEFFICIENT);
