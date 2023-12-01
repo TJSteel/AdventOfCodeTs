@@ -94,7 +94,8 @@ async function buildFile() {
   } else {
     let data = '';
     if (sessionToken) {
-      const response = await axios.get(`https://adventofcode.com/${year}/day/${day}/input`, {
+      let dayInt = parseInt(day);
+      const response = await axios.get(`https://adventofcode.com/${year}/day/${dayInt}/input`, {
         headers: { Cookie: `session=${sessionToken}` },
       });
       if (response.status === 200) {
