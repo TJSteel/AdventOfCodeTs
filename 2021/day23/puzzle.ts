@@ -24,4 +24,4 @@ class Puzzle extends AbstractPuzzle {
   };
 }
 
-export const puzzle = new Puzzle('2021', '23', PuzzleStatus.IN_PROGRESS);
+export const puzzle = new Puzzle('2021', '23', PuzzleStatus.NOT_SOLVED);
