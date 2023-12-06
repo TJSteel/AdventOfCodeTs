@@ -3,31 +3,42 @@ import { AbstractPuzzle } from '../../core/puzzle';
 
 // brute force part 2 was 200ms
 // end to end search 60ms
+// binary search 0.4ms
 
-const getFirstWin = (bestDistance: number, totalTime: number): number => {
-  for (let time = 1; time < totalTime; time++) {
-    const distance = getDistance(totalTime, time);
-    if (distance > bestDistance) {
-      return time;
-    }
+const getFirstWin = (bestDistance: number, totalTime: number, minTime: number, maxTime: number): number => {
+  if (minTime == maxTime) {
+    return minTime;
   }
-  return 0;
+
+  const midTime = Math.floor((minTime + maxTime) / 2);
+  const midWin: boolean = getDistance(totalTime, midTime) > bestDistance;
+
+  if (midWin) {
+    return getFirstWin(bestDistance, totalTime, minTime, midTime);
+  } else {
+    return getFirstWin(bestDistance, totalTime, midTime + 1, maxTime);
+  }
 };
 
-const getLastWin = (bestDistance: number, totalTime: number): number => {
-  for (let time = totalTime - 1; time > 0; time--) {
-    const distance = getDistance(totalTime, time);
-    if (distance > bestDistance) {
-      return time;
-    }
+const getLastWin = (bestDistance: number, totalTime: number, minTime: number, maxTime: number): number => {
+  if (minTime == maxTime) {
+    return minTime;
   }
-  return 0;
+
+  const midTime = Math.ceil((minTime + maxTime) / 2);
+  const midWin: boolean = getDistance(totalTime, midTime) > bestDistance;
+
+  if (midWin) {
+    return getLastWin(bestDistance, totalTime, midTime, maxTime);
+  } else {
+    return getLastWin(bestDistance, totalTime, minTime, midTime - 1);
+  }
 };
 const getDistance = (totalTime: number, holdTime: number): number => holdTime * (totalTime - holdTime);
 
 const getWinCount = (bestDistance: number, totalTime: number): number => {
-  const firstWin = getFirstWin(bestDistance, totalTime);
-  const lastWin = getLastWin(bestDistance, totalTime);
+  const firstWin = getFirstWin(bestDistance, totalTime, 1, totalTime - 1);
+  const lastWin = getLastWin(bestDistance, totalTime, 1, totalTime - 1);
   return lastWin - firstWin + 1;
 };
 
@@ -52,15 +63,15 @@ class Puzzle extends AbstractPuzzle {
   }
 
   calculateAnswer1 = (): number => {
-    const wins: number[] = [];
+    let answer = 1;
+
     for (let i = 0, len = this.times.length; i < len; i++) {
       const bestDistance = this.distances[i];
       const totalTime = this.times[i];
-
-      wins.push(getWinCount(bestDistance, totalTime));
+      answer *= getWinCount(bestDistance, totalTime);
     }
 
-    return wins.reduce((a, b) => a * b, 1);
+    return answer;
   };
 
   calculateAnswer2 = (): number => {
