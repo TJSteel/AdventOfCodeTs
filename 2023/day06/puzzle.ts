@@ -1,18 +1,34 @@
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
 
-const getWinCount = (bestDistance: number, totalTime: number): number => {
-  let winCount = 0;
+// brute force part 2 was 200ms
+// end to end search 60ms
+
+const getFirstWin = (bestDistance: number, totalTime: number): number => {
   for (let time = 1; time < totalTime; time++) {
-    const speed = time;
-    const timeLeft = totalTime - time;
-    const distance = speed * timeLeft;
+    const distance = getDistance(totalTime, time);
     if (distance > bestDistance) {
-      winCount++;
+      return time;
     }
   }
+  return 0;
+};
 
-  return winCount;
+const getLastWin = (bestDistance: number, totalTime: number): number => {
+  for (let time = totalTime - 1; time > 0; time--) {
+    const distance = getDistance(totalTime, time);
+    if (distance > bestDistance) {
+      return time;
+    }
+  }
+  return 0;
+};
+const getDistance = (totalTime: number, holdTime: number): number => holdTime * (totalTime - holdTime);
+
+const getWinCount = (bestDistance: number, totalTime: number): number => {
+  const firstWin = getFirstWin(bestDistance, totalTime);
+  const lastWin = getLastWin(bestDistance, totalTime);
+  return lastWin - firstWin + 1;
 };
 
 class Puzzle extends AbstractPuzzle {
