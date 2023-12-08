@@ -1,3 +1,5 @@
+import { updateExpressionWithTypeArguments } from 'typescript';
+
 const color = {
   BLACK: '30',
   RED: '31',
@@ -24,11 +26,41 @@ export const logger: any = {
   log,
 };
 
+const triangleNumber = (val: number): number => {
+  return (val * (val + 1)) / 2;
+};
+const degreesToRadians = (degrees: number): number => {
+  return (degrees * Math.PI) / 180;
+};
+const isPrime = (num: number): boolean => {
+  if (num == 2) return true;
+  if (num < 2 || num % 2 == 0) return false;
+  for (let i = 3; i * i <= num; i += 2) {
+    if (num % i == 0) return false;
+  }
+  return true;
+};
+const greatestCommonDenominator = (a: number, b: number): number => {
+  while (b != 0) {
+    let temp = b;
+    b = a % b;
+    a = temp;
+  }
+  return a;
+};
+const _lowestCommonMultiple = (a: number, b: number): number => {
+  return (a * b) / greatestCommonDenominator(a, b);
+};
+const lowestCommonMultiple = (numbers: number[]): number => {
+  if (numbers.length < 2) {
+    throw new Error(`numbers must contain at least 2 numbers`);
+  }
+  return numbers.reduce((a, b) => _lowestCommonMultiple(a, b), 1);
+};
 export const tjMath = {
-  triangleNumber: (val: number): number => {
-    return (val * (val + 1)) / 2;
-  },
-  degreesToRadians(degrees: number): number {
-    return (degrees * Math.PI) / 180;
-  },
+  triangleNumber,
+  degreesToRadians,
+  isPrime,
+  greatestCommonDenominator,
+  lowestCommonMultiple,
 };
