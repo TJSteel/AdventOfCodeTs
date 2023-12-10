@@ -13,8 +13,11 @@ for (let year = 2015; year <= yearToday; year++) {
     let puzzle = null;
     try {
       puzzle = require(`../${year}/day${dayStr}/puzzle`).puzzle;
-    } catch (err) {
-      continue;
+    } catch (err: any) {
+      if (err.code && err.code === 'MODULE_NOT_FOUND') {
+        continue;
+      }
+      throw new Error(err);
     }
 
     if (puzzle) {
