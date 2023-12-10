@@ -1,4 +1,4 @@
-import { updateExpressionWithTypeArguments } from 'typescript';
+import { Coordinate2d } from './coordinate2d';
 
 const color = {
   BLACK: '30',
@@ -57,10 +57,23 @@ const lowestCommonMultiple = (numbers: number[]): number => {
   }
   return numbers.reduce((a, b) => _lowestCommonMultiple(a, b), 1);
 };
+const polygonArea = (points: Coordinate2d[]): number => {
+  let a = 0;
+  let b = 0;
+  for (let i = 1; i < points.length; i++) {
+    a += points[i - 1].x * points[i].y;
+    b += points[i].x * points[i - 1].y;
+  }
+  a += points[points.length - 1].x * points[0].y;
+  b += points[0].x * points[points.length - 1].y;
+
+  return Math.abs(a - b) / 2;
+};
 export const tjMath = {
   triangleNumber,
   degreesToRadians,
   isPrime,
   greatestCommonDenominator,
   lowestCommonMultiple,
+  polygonArea,
 };
