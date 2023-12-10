@@ -16,7 +16,7 @@ interface Gear {
 }
 
 class Puzzle extends AbstractPuzzle {
-  map: Array2d = new Array2d();
+  map: Array2d<string> = new Array2d();
 
   setAnswers(): void {
     super.setAnswers(4361, 537732, 467835, 84883664);

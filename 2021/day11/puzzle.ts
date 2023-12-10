@@ -4,8 +4,8 @@ import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
 
 class Puzzle extends AbstractPuzzle {
-  private octopuses!: Array2d;
-  private flashed!: Array2d;
+  private octopuses!: Array2d<number>;
+  private flashed!: Array2d<boolean>;
   private flashes: number = 0;
   private queue: Array<Coordinate2d> = [];
 

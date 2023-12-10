@@ -9,7 +9,7 @@ const directions = {
 };
 
 export class Board {
-  map: Array2d;
+  map: Array2d<string>;
   constructor(blizzards: Blizzard[], moveCount: number, width: number, height: number) {
     this.map = new Array2d({ width, height, defaultValue: '.' });
     for (const blizzard of blizzards) {

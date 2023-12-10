@@ -7,7 +7,7 @@ class Puzzle extends AbstractPuzzle {
   points: Coordinate2d[] = [];
   paths: Array<Coordinate2d[]> = [];
   start: Coordinate2d = new Coordinate2d(500, 0);
-  map: Array2d = new Array2d();
+  map: Array2d<string> = new Array2d();
   min: Coordinate2d = new Coordinate2d(Infinity, Infinity);
   max: Coordinate2d = new Coordinate2d(0, 0);
   setAnswers(): void {

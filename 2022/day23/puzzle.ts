@@ -61,7 +61,7 @@ class Puzzle extends AbstractPuzzle {
     const height = maxCoord.y - minCoord.y + 1;
     const width = maxCoord.x - minCoord.x + 1;
     const area = height * width - this.elves.length;
-    const map: Array2d = new Array2d({ width, height, defaultValue: '.' });
+    const map: Array2d<string> = new Array2d({ width, height, defaultValue: '.' });
     for (const elf of this.elves) {
       map.setCell(elf.coord.copy().subtract(minCoord), '#');
     }

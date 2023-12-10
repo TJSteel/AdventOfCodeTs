@@ -4,7 +4,7 @@ import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
 
 class Puzzle extends AbstractPuzzle {
-  map: Array2d = new Array2d();
+  map: Array2d<string> = new Array2d();
 
   setAnswers(): void {
     super.setAnswers(58, 557, -1, -1);

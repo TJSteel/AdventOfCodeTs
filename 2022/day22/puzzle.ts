@@ -17,7 +17,7 @@ interface Range {
 
 class Puzzle extends AbstractPuzzle {
   instructions: string[] = [];
-  map: Array2d = new Array2d();
+  map: Array2d<string> = new Array2d();
   rowRanges: Range[] = [];
   columnRanges: Range[] = [];
   coord: Coordinate2d = new Coordinate2d(0, 0);

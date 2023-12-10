@@ -6,7 +6,7 @@ import { AbstractPuzzle } from '../../core/puzzle';
 class Puzzle extends AbstractPuzzle {
   coords: Coordinate2d[] = [];
   instructions: { direction: string; value: number }[] = [];
-  map: Array2d = new Array2d();
+  map: Array2d<string> = new Array2d();
   sizeX = 0;
   sizeY = 0;
 

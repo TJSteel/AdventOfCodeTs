@@ -1,12 +1,12 @@
 import { Coordinate2d } from './coordinate2d';
 import { logger } from './utils';
 
-export class Array2d {
-  public data: Array<any[]>;
+export class Array2d<T> {
+  public data: Array<T[]>;
 
   private height: number;
   private width: number;
-  private defaultValue: any;
+  private defaultValue: T | null | undefined;
   static neighboursAdjacent = [
     new Coordinate2d(0, -1),
     new Coordinate2d(-1, 0),
@@ -21,7 +21,7 @@ export class Array2d {
   ];
   static neighbours = [...Array2d.neighboursAdjacent, ...Array2d.neighboursDiagonal];
 
-  constructor(settings?: { width?: number; height?: number; defaultValue?: any; data?: [][] }) {
+  constructor(settings?: { width?: number; height?: number; defaultValue?: T | null; data?: [][] }) {
     this.width = settings?.width ? settings?.width : 0;
     this.height = settings?.height ? settings?.height : 0;
     this.defaultValue = settings?.defaultValue !== null ? settings?.defaultValue : null;
@@ -145,27 +145,27 @@ export class Array2d {
     }
   }
 
-  private _getNeighbours(coord: Coordinate2d, neighbourGroup: Array<Coordinate2d>): Array<Coordinate2d> {
+  public getNeighbourGroup(coord: Coordinate2d, neighbourGroup: Array<Coordinate2d>): Array<Coordinate2d> {
     let neighbours: Array<Coordinate2d> = [];
-    neighbourGroup.forEach((n) => {
+    for (const n of neighbourGroup) {
       let nCoord: Coordinate2d = new Coordinate2d(coord.x + n.x, coord.y + n.y);
       if (this.getCell(nCoord) !== null) {
         neighbours.push(nCoord);
       }
-    });
+    }
     return neighbours;
   }
 
   public getNeighbours(coord: Coordinate2d): Array<Coordinate2d> {
-    return this._getNeighbours(coord, Array2d.neighbours);
+    return this.getNeighbourGroup(coord, Array2d.neighbours);
   }
 
   public getNeighboursAdjacent(coord: Coordinate2d): Array<Coordinate2d> {
-    return this._getNeighbours(coord, Array2d.neighboursAdjacent);
+    return this.getNeighbourGroup(coord, Array2d.neighboursAdjacent);
   }
 
   public getNeighboursDiagonal(coord: Coordinate2d): Array<Coordinate2d> {
-    return this._getNeighbours(coord, Array2d.neighboursDiagonal);
+    return this.getNeighbourGroup(coord, Array2d.neighboursDiagonal);
   }
 
   public flipArrayX() {
@@ -238,7 +238,7 @@ export class Array2d {
     }
   }
 
-  public copy(): Array2d {
+  public copy(): Array2d<T> {
     return new Array2d({
       width: this.width,
       height: this.height,

@@ -15,7 +15,7 @@ interface Node {
 }
 
 class Puzzle extends AbstractPuzzle {
-  map!: Array2d;
+  map!: Array2d<any>;
   start!: Coordinate2d;
   end!: Coordinate2d;
   setAnswers(): void {

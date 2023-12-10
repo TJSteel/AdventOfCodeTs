@@ -17,7 +17,7 @@ const matrix = [
 
 class Puzzle extends AbstractPuzzle {
   enhancementAlgorithm: string = '';
-  image: Array2d = new Array2d();
+  image: Array2d<any> = new Array2d();
   border: string = '0';
 
   setAnswers(): void {
@@ -34,7 +34,7 @@ class Puzzle extends AbstractPuzzle {
     this.image = new Array2d({ data });
   }
 
-  addImagePadding(image: Array2d) {
+  addImagePadding(image: Array2d<any>) {
     for (let i = 0; i < 4; i++) {
       const width = image.getWidth();
       image.addRow(`${this.border}`.repeat(width).split(''));
@@ -42,9 +42,9 @@ class Puzzle extends AbstractPuzzle {
     }
   }
 
-  enhanceImage(image: Array2d): Array2d {
+  enhanceImage(image: Array2d<any>): Array2d<any> {
     this.addImagePadding(this.image);
-    const newImage: Array2d = image.copy();
+    const newImage: Array2d<any> = image.copy();
     for (const img of newImage) {
       const coord = img.coord;
       let binaryString = '';

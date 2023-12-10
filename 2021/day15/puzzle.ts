@@ -9,7 +9,7 @@ interface Queue {
 }
 
 class Puzzle extends AbstractPuzzle {
-  map: Array2d = new Array2d();
+  map: Array2d<any> = new Array2d();
 
   setAnswers(): void {
     super.setAnswers(40, 589, 315, 2885);

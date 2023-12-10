@@ -4,7 +4,7 @@ import { Array2d } from '../../core/array2d';
 import { Coordinate2d } from '../../core/coordinate2d';
 
 class Puzzle extends AbstractPuzzle {
-  grid!: Array2d;
+  grid!: Array2d<any>;
   setAnswers(): void {
     super.setAnswers(21, 1711, 8, 301392);
   }
