@@ -104,4 +104,4 @@ class Puzzle extends AbstractPuzzle {
   };
 }
 
-export const puzzle = new Puzzle('2022', '16', PuzzleStatus.COMPLETE);
+export const puzzle = new Puzzle('2022', '16', PuzzleStatus.INEFFICIENT);

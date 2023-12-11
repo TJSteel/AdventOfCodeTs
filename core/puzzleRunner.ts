@@ -22,7 +22,10 @@ for (let year = 2015; year <= yearToday; year++) {
 
     if (puzzle) {
       stats[puzzle.status] = stats[puzzle.status] ? stats[puzzle.status] + 1 : 1;
-      if (puzzle.status === PuzzleStatus.IN_PROGRESS || (override && puzzle.status !== PuzzleStatus.INEFFICIENT)) {
+      if (
+        puzzle.status === PuzzleStatus.IN_PROGRESS ||
+        (override && puzzle.status !== PuzzleStatus.INEFFICIENT && puzzle.status !== PuzzleStatus.NOT_SOLVED)
+      ) {
         logger.logColor(`\r\n######### ${year} day ${dayStr} starting #########`, logger.color.GREEN);
         errors += puzzle.run();
       } else if (puzzle.status === PuzzleStatus.INEFFICIENT) {
