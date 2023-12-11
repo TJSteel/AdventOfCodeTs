@@ -87,15 +87,38 @@ export class Array2d<T> {
     return this.height;
   }
 
-  public addRow(row: any[]): void {
+  public addRow(row: any[], index?: number): void {
     let rowLength = row.length;
     if (rowLength !== this.width) {
       throw new Error(
         `addRow failed because the row length '${rowLength}' is not equal to the Array2d width '${this.width}'`
       );
-    } else {
-      this.data.push(row);
-      this.height++;
+    }
+    if (index === undefined) {
+      index = this.height;
+    }
+    this.data.splice(index, 0, row);
+    this.height++;
+  }
+
+  public addColumn(column: any[], index?: number): void {
+    if (index === undefined) {
+      index = this.width;
+    }
+    let columnLength = column.length;
+    if (columnLength !== this.height) {
+      throw new Error(
+        `addColumn failed because the column length '${columnLength}' is not equal to the Array2d height '${this.height}'`
+      );
+    }
+    this.width++;
+    for (let x = this.width - 1; x > index; x--) {
+      for (let y = 0; y < this.height; y++) {
+        this.data[y][x] = this.data[y][x - 1];
+      }
+    }
+    for (let y = 0; y < this.height; y++) {
+      this.data[y][index] = column[y];
     }
   }
 
