@@ -69,6 +69,9 @@ const polygonArea = (points: Coordinate2d[]): number => {
 
   return Math.abs(a - b) / 2;
 };
+const sum = (numbers: number[]): number => {
+  return numbers.reduce((a, b) => a + b, 0);
+};
 export const tjMath = {
   triangleNumber,
   degreesToRadians,
@@ -76,4 +79,5 @@ export const tjMath = {
   greatestCommonDenominator,
   lowestCommonMultiple,
   polygonArea,
+  sum,
 };
