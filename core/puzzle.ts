@@ -109,9 +109,17 @@ export abstract class AbstractPuzzle {
     let answerString = ``;
     if (calculatedAnswer === answer) {
       answerString = logger.getColor(calculatedAnswer, logger.color.GREEN);
-    } else if (this.lowAnswers && this.lowAnswers[testKey] && calculatedAnswer <= this.lowAnswers[testKey]) {
+    } else if (
+      this.lowAnswers &&
+      this.lowAnswers[testKey] &&
+      calculatedAnswer <= this.lowAnswers[testKey].sort((a: number, b: number) => b - a)[0]
+    ) {
       answerString = logger.getColor(`${calculatedAnswer} is too low`, logger.color.RED);
-    } else if (this.highAnswers && this.highAnswers[testKey] && calculatedAnswer >= this.highAnswers[testKey]) {
+    } else if (
+      this.highAnswers &&
+      this.highAnswers[testKey] &&
+      calculatedAnswer >= this.highAnswers[testKey].sort((a: number, b: number) => a - b)[0]
+    ) {
       answerString = logger.getColor(`${calculatedAnswer} is too high`, logger.color.RED);
     } else if ((this.lowAnswers && this.lowAnswers[testKey]) || (this.highAnswers && this.highAnswers[testKey])) {
       answerString = logger.getColor(`${calculatedAnswer} is a potential answer`, logger.color.GREEN);
