@@ -19,10 +19,10 @@ function getInput(q) {
   );
 }
 
-async function buildFile() {
+const getYear = async () => {
   const today = new Date();
-  const yearToday = today.getFullYear();
   let year = 0;
+  const yearToday = today.getFullYear();
   while (year == 0) {
     const response = await getInput(`please enter a year between 2015-${yearToday}: (${yearToday}) `);
     const y = parseInt(response);
@@ -38,6 +38,10 @@ async function buildFile() {
       year = y;
     }
   }
+  return year;
+};
+const getDay = async () => {
+  const today = new Date();
   const dayToday = today.getDate();
   let day = '';
   while (day == '') {
@@ -56,6 +60,36 @@ async function buildFile() {
   if (day.length == 1) {
     day = `0${day}`;
   }
+  return day;
+};
+const getTemplateFile = async () => {
+  const dir = './template/dayTemplate/';
+  const templates = ['strings.ts', 'numbers.ts', 'array2dStrings.ts'];
+  let index = -1;
+
+  while (index == -1) {
+    console.log(`Available templates:`);
+    console.log(` [0] strings`);
+    console.log(` [1] numbers`);
+    console.log(` [2] Array2d of strings`);
+    const response = await getInput(`please pick a template: (0) `);
+
+    let d = parseInt(response);
+    if (response == '') {
+      d = 0;
+    }
+    if (d < 0 && d >= templates.length) {
+      console.log(`${d} is not a valid template number!`);
+    } else {
+      index = d;
+    }
+  }
+  return `${dir}${templates[index]}`;
+};
+
+async function buildFile() {
+  const year = await getYear();
+  const day = await getDay();
 
   const yearDir = `./${year}`;
   const dayDir = `${yearDir}/day${day}`;
@@ -68,14 +102,14 @@ async function buildFile() {
     }
   }
 
-  const templateFile = `./template/dayTemplate/puzzle.ts`;
+  const templateFile = await getTemplateFile();
   const dayFile = `${dayDir}/puzzle.ts`;
 
   if (fs.existsSync(dayFile)) {
     console.log(`${dayFile} already exists!`);
   } else {
     let data = [];
-    const lines = fs.readFileSync(templateFile, { encoding: 'utf-8' }).split('\n');
+    const lines = fs.readFileSync(templateFile, { encoding: 'utf-8' }).replace(/\r/g, '').split('\n');
     for (const line of lines) {
       if (line.includes('export')) {
         data.push(line.replace('Year', year).replace('Day', day));
@@ -84,7 +118,7 @@ async function buildFile() {
       }
     }
 
-    fs.writeFileSync(dayFile, data.join('\r\n'), { encoding: 'utf-8' });
+    fs.writeFileSync(dayFile, data.join('\n'), { encoding: 'utf-8' });
     console.log(`${dayFile} created successfully!`);
   }
 
@@ -95,17 +129,23 @@ async function buildFile() {
     let data = '';
     if (sessionToken) {
       let dayInt = parseInt(day);
-      const response = await axios.get(`https://adventofcode.com/${year}/day/${dayInt}/input`, {
-        headers: { Cookie: `session=${sessionToken}` },
-      });
-      if (response.status === 200) {
-        data = response.data.split('\n');
+      try {
+        const response = await axios.get(`https://adventofcode.com/${year}/day/${dayInt}/input`, {
+          headers: { Cookie: `session=${sessionToken}` },
+        });
+        data = response.data.replace(/\r/g, '').split('\n');
         while (data[data.length - 1] == '') {
           data.pop();
         }
-        data = data.join('\r\n');
-      } else {
-        console.error(response);
+        data = data.join('\n');
+      } catch (err) {
+        if (err.response.status === 404) {
+          console.log(`Puzzle input not found for ${year} day ${dayInt}`);
+          console.log(err.response.data);
+        } else {
+          console.error(`unknown error occurred with code: ${err.response.status}`);
+          console.error(err.response.data);
+        }
       }
     }
     fs.writeFileSync(inputFile, data, { encoding: 'utf-8' });
