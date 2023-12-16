@@ -59,7 +59,9 @@ export abstract class AbstractPuzzle {
   private getInput = (inputFile: string): void => {
     this.input = readFileSync(`${this.year}/day${this.day}/input/${inputFile}.txt`, {
       encoding: 'utf-8',
-    }).split('\r\n');
+    })
+      .replace(/\r/g, '')
+      .split('\n');
   };
 
   private getTestInput = (): void => {
