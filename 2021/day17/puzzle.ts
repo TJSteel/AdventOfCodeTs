@@ -1,7 +1,7 @@
 import { Coordinate2d } from '../../core/coordinate2d';
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
-import { tjMath } from '../../core/utils';
+import { TjMath } from '../../core/utils/math';
 
 class Puzzle extends AbstractPuzzle {
   target: { from: Coordinate2d; to: Coordinate2d } = { from: new Coordinate2d(0, 0), to: new Coordinate2d(0, 0) };
@@ -30,14 +30,14 @@ class Puzzle extends AbstractPuzzle {
   }
 
   calculateAnswer1 = (): number => {
-    return tjMath.triangleNumber(Math.abs(this.target.to.y) - 1);
+    return TjMath.triangleNumber(Math.abs(this.target.to.y) - 1);
   };
 
   calculateAnswer2 = (): number => {
     let highestY = Math.abs(this.target.to.y) - 1;
 
     let lowestX = 0;
-    while (tjMath.triangleNumber(lowestX) < this.target.from.x) {
+    while (TjMath.triangleNumber(lowestX) < this.target.from.x) {
       lowestX++;
     }
     let highestX = this.target.to.x;

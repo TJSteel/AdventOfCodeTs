@@ -1,4 +1,4 @@
-import { tjMath } from './utils';
+import { TjMath } from './utils/math';
 
 export class Coordinate2d {
   public x: number;
@@ -40,7 +40,7 @@ export class Coordinate2d {
   }
 
   rotateDegrees(degrees: number): Coordinate2d {
-    const radians = tjMath.degreesToRadians(degrees);
+    const radians = TjMath.degreesToRadians(degrees);
     this.rotate(radians);
     return this;
   }

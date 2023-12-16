@@ -1,6 +1,7 @@
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
-import { stringUtils, tjMath } from '../../core/utils';
+import { TjMath } from '../../core/utils/math';
+import { StringUtils } from '../../core/utils/stringUtils';
 
 // this puzzle is essentially a single line nonogram
 
@@ -83,10 +84,10 @@ class Puzzle extends AbstractPuzzle {
     const memo = new Map();
     this.input.forEach((v) => {
       const { pattern, numbers } = v;
-      const solution = getValidSolutionCount(stringUtils.trim(pattern, '.'), numbers, memo);
+      const solution = getValidSolutionCount(StringUtils.trim(pattern, '.'), numbers, memo);
       solutions.push(solution);
     });
-    return tjMath.sum(solutions);
+    return TjMath.sum(solutions);
   };
 
   calculateAnswer2 = (): number => {
@@ -98,7 +99,7 @@ class Puzzle extends AbstractPuzzle {
     const memo = new Map();
     this.input.forEach((v) => {
       const { pattern, numbers } = v;
-      answer += getValidSolutionCount(stringUtils.trim(pattern, '.'), numbers, memo);
+      answer += getValidSolutionCount(StringUtils.trim(pattern, '.'), numbers, memo);
     });
     return answer;
   };

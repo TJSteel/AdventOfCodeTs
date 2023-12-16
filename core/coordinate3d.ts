@@ -1,4 +1,4 @@
-import { tjMath } from './utils';
+import { TjMath } from './utils/math';
 
 export class Coordinate3d {
   public x: number;
@@ -63,9 +63,9 @@ export class Coordinate3d {
 
   rotateDegrees(degrees: Coordinate3d): Coordinate3d {
     const radians: Coordinate3d = degrees.copy();
-    radians.x = tjMath.degreesToRadians(radians.x);
-    radians.y = tjMath.degreesToRadians(radians.y);
-    radians.z = tjMath.degreesToRadians(radians.z);
+    radians.x = TjMath.degreesToRadians(radians.x);
+    radians.y = TjMath.degreesToRadians(radians.y);
+    radians.z = TjMath.degreesToRadians(radians.z);
     this.rotate(radians);
     return this;
   }

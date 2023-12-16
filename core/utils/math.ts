@@ -1,30 +1,4 @@
-import { Coordinate2d } from './coordinate2d';
-
-const color = {
-  BLACK: '30',
-  RED: '31',
-  GREEN: '32',
-  YELLOW: '33',
-  BLUE: '34',
-  PURPLE: '35',
-  CYAN: '36',
-  WHITE: '37',
-};
-const getColor = (str: string, color: string): string => {
-  return `\u001b[${color}m${str}\u001b[0m`;
-};
-const logColor = (str: string, color: string = '37'): void => {
-  console.info(getColor(str, color));
-};
-const log = (str: string): void => {
-  console.info(str);
-};
-export const logger: any = {
-  color,
-  getColor,
-  logColor,
-  log,
-};
+import { Coordinate2d } from '../coordinate2d';
 
 const triangleNumber = (val: number): number => {
   return (val * (val + 1)) / 2;
@@ -72,7 +46,7 @@ const polygonArea = (points: Coordinate2d[]): number => {
 const sum = (numbers: number[]): number => {
   return numbers.reduce((a, b) => a + b, 0);
 };
-export const tjMath = {
+export const TjMath = {
   triangleNumber,
   degreesToRadians,
   isPrime,
@@ -80,17 +54,4 @@ export const tjMath = {
   lowestCommonMultiple,
   polygonArea,
   sum,
-};
-
-const trim = (string: string, char: string): string => {
-  while (string[0] == char) {
-    string = string.substring(1);
-  }
-  while (string[string.length - 1] == char) {
-    string = string.substring(0, string.length - 1);
-  }
-  return string;
-};
-export const stringUtils = {
-  trim,
 };

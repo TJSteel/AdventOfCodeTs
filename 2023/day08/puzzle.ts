@@ -1,6 +1,6 @@
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
-import { tjMath } from '../../core/utils';
+import { TjMath } from '../../core/utils/math';
 
 class Puzzle extends AbstractPuzzle {
   map: any = {};
@@ -67,7 +67,7 @@ class Puzzle extends AbstractPuzzle {
         index = 0;
       }
     }
-    return tjMath.lowestCommonMultiple(answers);
+    return TjMath.lowestCommonMultiple(answers);
   };
 }
 

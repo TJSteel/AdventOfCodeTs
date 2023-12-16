@@ -1,5 +1,5 @@
 import { Coordinate2d } from './coordinate2d';
-import { logger } from './utils';
+import { Logger } from './utils/logger';
 
 export class Array2d<T> {
   public data: Array<T[]>;
@@ -73,9 +73,9 @@ export class Array2d<T> {
   };
 
   public print(delimiter: string = ''): void {
-    logger.log('');
+    Logger.log('');
     for (let y = 0; y < this.height; y++) {
-      logger.log(this.data[y].join(delimiter));
+      Logger.log(this.data[y].join(delimiter));
     }
   }
 

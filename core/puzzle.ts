@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { PuzzleStatus } from './enums';
-import { logger } from './utils';
+import { Logger } from './utils/logger';
 
 interface AdditionalPuzzleSettings {
   testInputOnly?: boolean;
@@ -90,13 +90,13 @@ export abstract class AbstractPuzzle {
 
     this.isTest = name.includes('Test');
     if (answer === -1) {
-      logger.logColor(
+      Logger.logColor(
         `${this.year} day ${this.day} ${name} skipping (because answer is ${answer})`,
-        logger.color.YELLOW
+        Logger.color.YELLOW
       );
       return true;
     }
-    logger.logColor(`${this.year} day ${this.day} ${name} running`, logger.color.YELLOW);
+    Logger.logColor(`${this.year} day ${this.day} ${name} running`, Logger.color.YELLOW);
     getInput();
     let start = process.hrtime();
     let calculatedAnswer = null;
@@ -110,27 +110,27 @@ export abstract class AbstractPuzzle {
 
     let answerString = ``;
     if (calculatedAnswer === answer) {
-      answerString = logger.getColor(calculatedAnswer, logger.color.GREEN);
+      answerString = Logger.getColor(calculatedAnswer, Logger.color.GREEN);
     } else if (
       this.lowAnswers &&
       this.lowAnswers[testKey] &&
       calculatedAnswer <= this.lowAnswers[testKey].sort((a: number, b: number) => b - a)[0]
     ) {
-      answerString = logger.getColor(`${calculatedAnswer} is too low`, logger.color.RED);
+      answerString = Logger.getColor(`${calculatedAnswer} is too low`, Logger.color.RED);
     } else if (
       this.highAnswers &&
       this.highAnswers[testKey] &&
       calculatedAnswer >= this.highAnswers[testKey].sort((a: number, b: number) => a - b)[0]
     ) {
-      answerString = logger.getColor(`${calculatedAnswer} is too high`, logger.color.RED);
+      answerString = Logger.getColor(`${calculatedAnswer} is too high`, Logger.color.RED);
     } else if ((this.lowAnswers && this.lowAnswers[testKey]) || (this.highAnswers && this.highAnswers[testKey])) {
-      answerString = logger.getColor(`${calculatedAnswer} is a potential answer`, logger.color.GREEN);
+      answerString = Logger.getColor(`${calculatedAnswer} is a potential answer`, Logger.color.GREEN);
     } else {
-      answerString = logger.getColor(`${calculatedAnswer} != ${answer}`, logger.color.RED);
+      answerString = Logger.getColor(`${calculatedAnswer} != ${answer}`, Logger.color.RED);
     }
 
-    logger.log(`${logger.getColor(`${this.year} day ${this.day} ${name} answer: `, logger.color.CYAN)}${answerString}`);
-    logger.logColor(`${this.year} day ${this.day} ${name} took: ${end[0]}s ${end[1] / 1000000}ms`, logger.color.CYAN);
+    Logger.log(`${Logger.getColor(`${this.year} day ${this.day} ${name} answer: `, Logger.color.CYAN)}${answerString}`);
+    Logger.logColor(`${this.year} day ${this.day} ${name} took: ${end[0]}s ${end[1] / 1000000}ms`, Logger.color.CYAN);
     return calculatedAnswer === answer;
   };
 

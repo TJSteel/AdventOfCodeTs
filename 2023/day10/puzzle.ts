@@ -2,7 +2,7 @@ import { Array2d } from '../../core/array2d';
 import { Coordinate2d } from '../../core/coordinate2d';
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
-import { tjMath } from '../../core/utils';
+import { TjMath } from '../../core/utils/math';
 
 interface Node {
   coord: Coordinate2d;
@@ -95,7 +95,7 @@ class Puzzle extends AbstractPuzzle {
   calculateAnswer2 = (): number => {
     const shoeLacePoints: Coordinate2d[] = getLoopPoints(this.map);
 
-    const area = tjMath.polygonArea(shoeLacePoints);
+    const area = TjMath.polygonArea(shoeLacePoints);
     const circumference = shoeLacePoints.length / 2;
 
     return area - circumference + 1;

@@ -1,5 +1,5 @@
 import { PuzzleStatus } from './enums';
-import { logger } from './utils';
+import { Logger } from './utils/logger';
 
 const stats: any = {};
 const all = process.argv[2];
@@ -26,23 +26,23 @@ for (let year = 2015; year <= yearToday; year++) {
         puzzle.status === PuzzleStatus.IN_PROGRESS ||
         (override && puzzle.status !== PuzzleStatus.INEFFICIENT && puzzle.status !== PuzzleStatus.NOT_SOLVED)
       ) {
-        logger.logColor(`\r\n######### ${year} day ${dayStr} starting #########`, logger.color.GREEN);
+        Logger.logColor(`\r\n######### ${year} day ${dayStr} starting #########`, Logger.color.GREEN);
         errors += puzzle.run();
       } else if (puzzle.status === PuzzleStatus.INEFFICIENT) {
-        logger.logColor(`\r\n######### ${year} day ${dayStr} needs improvement! #########`, logger.color.YELLOW);
+        Logger.logColor(`\r\n######### ${year} day ${dayStr} needs improvement! #########`, Logger.color.YELLOW);
       } else if (puzzle.status === PuzzleStatus.NOT_SOLVED) {
-        logger.logColor(`\r\n######### ${year} day ${dayStr} was not completed! #########`, logger.color.RED);
+        Logger.logColor(`\r\n######### ${year} day ${dayStr} was not completed! #########`, Logger.color.RED);
       }
     }
   }
 }
 
 for (const key of Object.keys(stats)) {
-  logger.log(`${logger.getColor(key, logger.color.CYAN)}: ${logger.getColor(stats[key], logger.color.YELLOW)}`);
+  Logger.log(`${Logger.getColor(key, Logger.color.CYAN)}: ${Logger.getColor(stats[key], Logger.color.YELLOW)}`);
 }
-logger.log(
-  `${logger.getColor('Errors', logger.color.CYAN)}: ${logger.getColor(
+Logger.log(
+  `${Logger.getColor('Errors', Logger.color.CYAN)}: ${Logger.getColor(
     errors,
-    errors > 0 ? logger.color.RED : logger.color.GREEN
+    errors > 0 ? Logger.color.RED : Logger.color.GREEN
   )}`
 );
