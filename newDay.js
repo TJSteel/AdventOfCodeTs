@@ -64,7 +64,7 @@ const getDay = async () => {
 };
 const getTemplateFile = async () => {
   const dir = './template/dayTemplate/';
-  const templates = ['strings.ts', 'numbers.ts', 'array2dStrings.ts'];
+  const templates = ['strings.ts', 'numbers.ts', 'array2dStrings.ts', 'array2dNumbers.ts'];
   let index = -1;
 
   while (index == -1) {
@@ -72,6 +72,7 @@ const getTemplateFile = async () => {
     console.log(` [0] strings`);
     console.log(` [1] numbers`);
     console.log(` [2] Array2d of strings`);
+    console.log(` [3] Array2d of numbers`);
     const response = await getInput(`please pick a template: (0) `);
 
     let d = parseInt(response);
