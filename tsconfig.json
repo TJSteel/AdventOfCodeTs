@@ -4,10 +4,11 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
+    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "cspell.json", "**/*.spec.ts"]
 }

@@ -1,6 +1,6 @@
 import { PuzzleStatus } from '../../core/enums';
-import { Map } from '../../core/maps/map';
-import { MapNode } from '../../core/maps/mapNode';
+import { Map } from './maps/map';
+import { MapNode } from './maps/mapNode';
 import { AbstractPuzzle } from '../../core/puzzle';
 
 class Puzzle extends AbstractPuzzle {
