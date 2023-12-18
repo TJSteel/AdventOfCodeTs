@@ -134,7 +134,7 @@ export class Array2d<T> {
     return this.inRangeX(coord.x) && this.inRangeY(coord.y);
   }
 
-  public getCell(coord: Coordinate2d): any {
+  public getCell(coord: Coordinate2d): T | null {
     if (this.inRange(coord)) {
       return this.data[coord.y][coord.x];
     } else {
@@ -142,7 +142,7 @@ export class Array2d<T> {
     }
   }
 
-  public setCell(coord: Coordinate2d, value: any): void {
+  public setCell(coord: Coordinate2d, value: T): void {
     if (this.inRange(coord)) {
       this.data[coord.y][coord.x] = value;
     } else {
@@ -268,5 +268,35 @@ export class Array2d<T> {
       defaultValue: this.defaultValue,
       data: JSON.parse(JSON.stringify(this.data)),
     });
+  }
+
+  public countReachableCells(
+    predicate: (data: T) => boolean,
+    startCoord: Coordinate2d,
+    neighbours: Coordinate2d[]
+  ): number {
+    if (!this.inRange(startCoord)) {
+      return 0;
+    }
+    const visited: Set<string> = new Set();
+    const queue: Coordinate2d[] = [startCoord];
+    visited.add(startCoord.toString());
+    let matched = predicate(this.getCell(startCoord)!) ? 1 : 0;
+
+    while (queue.length > 0) {
+      const current = queue.pop()!;
+      for (const neighbour of this.getNeighbourGroup(current, neighbours)) {
+        if (visited.has(neighbour.toString())) {
+          continue;
+        }
+        visited.add(neighbour.toString());
+        if (predicate(this.getCell(neighbour)!)) {
+          queue.push(neighbour);
+          matched++;
+        }
+      }
+    }
+
+    return matched;
   }
 }
