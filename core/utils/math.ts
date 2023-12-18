@@ -32,16 +32,15 @@ const lowestCommonMultiple = (numbers: number[]): number => {
   return numbers.reduce((a, b) => _lowestCommonMultiple(a, b), 1);
 };
 const polygonArea = (points: Coordinate2d[]): number => {
-  let a = 0;
-  let b = 0;
-  for (let i = 1; i < points.length; i++) {
-    a += points[i - 1].x * points[i].y;
-    b += points[i].x * points[i - 1].y;
+  const calculateCoord = (a: Coordinate2d, b: Coordinate2d): number => {
+    return (b.y - a.y) * (b.x + a.x);
+  };
+  let area = 0;
+  for (let i = 0; i < points.length - 1; i++) {
+    area += calculateCoord(points[i], points[i + 1]);
   }
-  a += points[points.length - 1].x * points[0].y;
-  b += points[0].x * points[points.length - 1].y;
-
-  return Math.abs(a - b) / 2;
+  area += calculateCoord(points[points.length - 1], points[0]);
+  return Math.abs(area) / 2;
 };
 const sum = (numbers: number[]): number => {
   return numbers.reduce((a, b) => a + b, 0);

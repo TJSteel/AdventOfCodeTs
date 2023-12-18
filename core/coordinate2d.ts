@@ -25,6 +25,12 @@ export class Coordinate2d {
     return this;
   }
 
+  multiply(multiplication: number): Coordinate2d {
+    this.x *= multiplication;
+    this.y *= multiplication;
+    return this;
+  }
+
   toString(): string {
     return `x: ${this.x}, y: ${this.y}`;
   }

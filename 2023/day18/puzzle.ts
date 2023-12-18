@@ -1,12 +1,13 @@
-import { Array2d } from '../../core/array2d';
 import { Coordinate2d } from '../../core/coordinate2d';
 import { PuzzleStatus } from '../../core/enums';
 import { AbstractPuzzle } from '../../core/puzzle';
+import { TjMath } from '../../core/utils/math';
 
 interface DigPlan {
   direction: string;
   distance: number;
-  hexCode: string;
+  direction2?: string;
+  distance2?: number;
 }
 
 const directions = {
@@ -16,69 +17,59 @@ const directions = {
   R: new Coordinate2d(1, 0),
 };
 
-class Puzzle extends AbstractPuzzle {
-  map: Array2d<string> = new Array2d();
+const getArea = (digPlans: DigPlan[]): number => {
+  const startCoord = new Coordinate2d(0, 0);
+  let currentCoord = startCoord.copy();
+  const coordinates: Coordinate2d[] = [];
+  let circumference = 0;
 
+  for (const digPlan of digPlans) {
+    const direction: Coordinate2d = directions[digPlan.direction as keyof typeof directions]
+      .copy()
+      .multiply(digPlan.distance);
+    currentCoord = currentCoord.copy().add(direction);
+    coordinates.push(currentCoord);
+    circumference += startCoord.manhattanDistance(direction);
+  }
+
+  const area = TjMath.polygonArea(coordinates);
+  return area + circumference / 2 + 1;
+};
+
+class Puzzle extends AbstractPuzzle {
   setAnswers(): void {
-    super.setAnswers(62, 42317, 0, 0);
+    super.setAnswers(62, 42317, 952408144115, 83605563360288);
   }
 
   parseInput(): void {
     this.input = this.input.map((i): DigPlan => {
       const parts = i.split(' ');
+      const hexCode = parts[2].replace(/[\(\#\)]/g, '');
+      const direction2 = 'R.D.L.U'.split('.')[parseInt(hexCode.substring(5))];
+      const distance2 = parseInt(hexCode.substring(0, 5), 16);
       return {
         direction: parts[0],
         distance: parseInt(parts[1]),
-        hexCode: parts[2].replace(/[\(\#\)]/g, ''),
+        direction2,
+        distance2,
       };
     });
-    this.map = new Array2d<string>({ width: 1, height: 1, defaultValue: '.' });
-    this.map.setCell(new Coordinate2d(0, 0), '#');
   }
 
   calculateAnswer1 = (): number => {
-    const currentCoord = new Coordinate2d(0, 0);
-    for (const digPlan of this.input) {
-      for (let i = digPlan.distance; i > 0; i--) {
-        const direction: Coordinate2d = directions[digPlan.direction as keyof typeof directions];
-        currentCoord.add(direction);
-        if (!this.map.inRange(currentCoord)) {
-          // extend the map and subtract the direction to put us back in range if negative
-          if (currentCoord.x < 0) {
-            this.map.addColumn('.'.repeat(this.map.getHeight()).split(''), 0);
-            currentCoord.x = 0;
-          } else if (currentCoord.x >= this.map.getWidth()) {
-            this.map.addColumn('.'.repeat(this.map.getHeight()).split(''));
-          }
-          if (currentCoord.y < 0) {
-            this.map.addRow('.'.repeat(this.map.getWidth()).split(''), 0);
-            currentCoord.y = 0;
-          } else if (currentCoord.y >= this.map.getHeight()) {
-            this.map.addRow('.'.repeat(this.map.getWidth()).split(''));
-          }
-        }
-        this.map.setCell(currentCoord, '#');
-      }
-    }
-    this.map.addColumn('.'.repeat(this.map.getHeight()).split(''), 0);
-    this.map.addColumn('.'.repeat(this.map.getHeight()).split(''));
-    this.map.addRow('.'.repeat(this.map.getWidth()).split(''), 0);
-    this.map.addRow('.'.repeat(this.map.getWidth()).split(''));
-
-    const unfilledCells = this.map.countReachableCells(
-      (cell) => cell == '.',
-      new Coordinate2d(0, 0),
-      Array2d.neighboursAdjacent
-    );
-    const filledCells = this.map.getHeight() * this.map.getWidth() - unfilledCells;
-    return filledCells;
+    return getArea(this.input);
   };
 
   calculateAnswer2 = (): number => {
-    let answer = 0;
-
-    return answer;
+    return getArea(
+      this.input.map((digPlan) => {
+        return {
+          direction: digPlan.direction2,
+          distance: digPlan.distance2,
+        };
+      })
+    );
   };
 }
 
-export const puzzle = new Puzzle('2023', '18', PuzzleStatus.IN_PROGRESS);
+export const puzzle = new Puzzle('2023', '18', PuzzleStatus.COMPLETE);
