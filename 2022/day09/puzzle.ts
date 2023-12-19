@@ -68,7 +68,7 @@ const getTailLocationCount = (length: number, moves: Move[]): number => {
     const grid = new Array2d({ width: maxX + 1, height: maxY + 1, defaultValue: '.' });
     for (let i = length - 1; i >= 0; i--) {
       const r = rope[i];
-      grid.setCell(new Coordinate2d(r.current.x + offsetX, r.current.y + offsetY), i);
+      grid.setCell(new Coordinate2d(r.current.x + offsetX, r.current.y + offsetY), i + '');
     }
     grid.print();
   };

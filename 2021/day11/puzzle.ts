@@ -29,7 +29,7 @@ class Puzzle extends AbstractPuzzle {
     this.flashes++;
     for (let nCoord of this.octopuses.getNeighbours(coord)) {
       this.queue.push(nCoord);
-      this.octopuses.setCell(nCoord, this.octopuses.getCell(nCoord) + 1);
+      this.octopuses.setCell(nCoord, this.octopuses.getCell(nCoord)! + 1);
     }
   }
 
@@ -70,7 +70,7 @@ class Puzzle extends AbstractPuzzle {
       }
       while (this.queue.length > 0) {
         let coord = this.queue.shift()!;
-        if (this.octopuses.getCell(coord) > 9 && !this.flashed.getCell(coord)) {
+        if (this.octopuses.getCell(coord)! > 9 && !this.flashed.getCell(coord)) {
           this.flash(coord);
         }
       }
@@ -101,7 +101,7 @@ class Puzzle extends AbstractPuzzle {
       }
       while (this.queue.length > 0) {
         let coord = this.queue.shift()!;
-        if (this.octopuses.getCell(coord) > 9 && !this.flashed.getCell(coord)) {
+        if (this.octopuses.getCell(coord)! > 9 && !this.flashed.getCell(coord)) {
           this.flash(coord);
         }
       }

@@ -36,7 +36,7 @@ class Puzzle extends AbstractPuzzle {
       for (let length = 1; length <= 3; length++) {
         nextCoord.add(direction);
         if (this.map.inRange(nextCoord)) {
-          cost += this.map.getCell(nextCoord);
+          cost += this.map.getCell(nextCoord)!;
           visited.add(`${nextCoord.toString()}:${direction.toString()}:${length}`);
           queue.push({
             coord: nextCoord.copy(),
@@ -73,7 +73,7 @@ class Puzzle extends AbstractPuzzle {
           if (!this.map.inRange(nextCoord)) {
             break;
           }
-          cost += this.map.getCell(nextCoord);
+          cost += this.map.getCell(nextCoord)!;
           const visitedKey = `${nextCoord.toString()}:${current.direction.toString()}:${length}`;
           if (!visited.has(visitedKey)) {
             visited.add(visitedKey);
@@ -105,7 +105,7 @@ class Puzzle extends AbstractPuzzle {
       for (let length = 1; length <= 10; length++) {
         nextCoord.add(direction);
         if (this.map.inRange(nextCoord)) {
-          cost += this.map.getCell(nextCoord);
+          cost += this.map.getCell(nextCoord)!;
           if (length < 4) {
             continue;
           }
@@ -145,7 +145,7 @@ class Puzzle extends AbstractPuzzle {
           if (!this.map.inRange(nextCoord)) {
             break;
           }
-          cost += this.map.getCell(nextCoord);
+          cost += this.map.getCell(nextCoord)!;
           if (length < 4) {
             continue;
           }

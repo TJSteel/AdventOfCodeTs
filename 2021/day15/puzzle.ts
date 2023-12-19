@@ -41,8 +41,8 @@ class Puzzle extends AbstractPuzzle {
     let nY = newMap.getHeight();
     for (let y = 0; y < oY; y++) {
       for (let x = oX; x < nX; x++) {
-        let cell = newMap.getCell(new Coordinate2d(x, y));
-        let offsetCell = newMap.getCell(new Coordinate2d(x - oX, y));
+        let cell = newMap.getCell(new Coordinate2d(x, y))!;
+        let offsetCell = newMap.getCell(new Coordinate2d(x - oX, y))!;
         cell.risk = offsetCell.risk + 1;
         if (cell.risk > 9) {
           cell.risk = 1;
@@ -51,8 +51,8 @@ class Puzzle extends AbstractPuzzle {
     }
     for (let y = oY; y < nY; y++) {
       for (let x = 0; x < nX; x++) {
-        let cell = newMap.getCell(new Coordinate2d(x, y));
-        let offsetCell = newMap.getCell(new Coordinate2d(x, y - oY));
+        let cell = newMap.getCell(new Coordinate2d(x, y))!;
+        let offsetCell = newMap.getCell(new Coordinate2d(x, y - oY))!;
         cell.risk = offsetCell.risk + 1;
         if (cell.risk > 9) {
           cell.risk = 1;

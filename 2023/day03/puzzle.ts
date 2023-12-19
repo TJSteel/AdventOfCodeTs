@@ -41,7 +41,7 @@ class Puzzle extends AbstractPuzzle {
     for (let c = 0; c < this.map.getWidth(); c++) {
       for (let r = 0; r < this.map.getHeight(); r++) {
         const coord = new Coordinate2d(r, c);
-        const value = parseInt(this.map.getCell(coord));
+        const value = parseInt(this.map.getCell(coord)!);
         if (isNaN(value)) {
           if (currentPart.isPartNumber) {
             parts.push(currentPart);
@@ -57,7 +57,7 @@ class Puzzle extends AbstractPuzzle {
 
           if (!currentPart.isPartNumber) {
             for (const neighbourCoord of this.map.getNeighbours(coord)) {
-              const neighbour = this.map.getCell(neighbourCoord);
+              const neighbour = this.map.getCell(neighbourCoord)!;
               if (neighbour !== '.' && isNaN(parseInt(neighbour))) {
                 currentPart.isPartNumber = true;
                 break;
@@ -94,7 +94,7 @@ class Puzzle extends AbstractPuzzle {
     for (let c = 0; c < this.map.getWidth(); c++) {
       for (let r = 0; r < this.map.getHeight(); r++) {
         const coord = new Coordinate2d(r, c);
-        const value = parseInt(this.map.getCell(coord));
+        const value = parseInt(this.map.getCell(coord)!);
         if (isNaN(value)) {
           if (currentPart.isPartNumber) {
             parts.push(currentPart);
