@@ -3,56 +3,79 @@ import { LinkedList } from './linkedList';
 
 describe('Linked List', () => {
   describe('constructor', () => {
-    it('should throw error when creating a linked list with 0 elements', () => {
-      assert.throws(() => {
-        new LinkedList([]);
-      }, `Cannot create a LinkedList with 0 elements`);
+    it('should create a linked list with 0 elements', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
+      expect(linkedList.length).equals(0);
+      expect(linkedList.start).to.be.null;
+      expect(linkedList.end).to.be.null;
     });
 
     it('should create a linked list with 3 elements', () => {
       const linkedList: LinkedList<number> = new LinkedList([1, 2, 3, 4, 5]);
 
       expect(linkedList.length).equals(5);
+      expect(linkedList.start).not.to.be.null;
+      expect(linkedList.end).not.to.be.null;
     });
   });
 
   describe('insertAtStart', () => {
+    it('should insert an element at the start of an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
+      const value = 0;
+      linkedList.insertAtStart(value);
+
+      expect(linkedList.length).equals(1);
+      expect(linkedList.start!.data).equals(value);
+      expect(linkedList.end!.data).equals(value);
+    });
+
     it('should insert an element at the start', () => {
       const linkedList: LinkedList<number> = new LinkedList([1, 2, 3, 4, 5]);
       const currentStart = linkedList.start;
-      expect(currentStart.previous).to.be.null;
+      expect(currentStart!.previous).to.be.null;
 
       const value = 0;
       linkedList.insertAtStart(value);
 
-      expect(currentStart.previous).to.deep.equal(linkedList.start);
+      expect(currentStart!.previous).to.deep.equal(linkedList.start);
       expect(linkedList.length).equals(6);
-      expect(linkedList.start.data).equals(value);
+      expect(linkedList.start!.data).equals(value);
     });
   });
 
   describe('insertAtEnd', () => {
+    it('should insert an element at the end of an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
+      const value = 0;
+      linkedList.insertAtEnd(value);
+
+      expect(linkedList.length).equals(1);
+      expect(linkedList.start!.data).equals(value);
+      expect(linkedList.end!.data).equals(value);
+    });
+
     it('should insert an element at the end', () => {
       const linkedList: LinkedList<number> = new LinkedList([1, 2, 3, 4, 5]);
       const currentEnd = linkedList.end;
-      expect(currentEnd.next).to.be.null;
+      expect(currentEnd!.next).to.be.null;
 
       const value = 6;
       linkedList.insertAtEnd(value);
 
-      expect(currentEnd.next).to.deep.equal(linkedList.end);
+      expect(currentEnd!.next).to.deep.equal(linkedList.end);
       expect(linkedList.length).equals(6);
-      expect(linkedList.end.data).equals(value);
+      expect(linkedList.end!.data).equals(value);
     });
   });
 
   describe('shiftNode', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.shiftNode();
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
     });
 
     it('should remove the first element', () => {
@@ -63,15 +86,24 @@ describe('Linked List', () => {
 
       expect(start).to.deep.equal(shifted);
     });
+
+    it('should remove the final element', () => {
+      const linkedList: LinkedList<number> = new LinkedList([1]);
+      const removed = linkedList.shiftNode();
+      expect(removed.data).to.equal(1);
+      expect(linkedList.length).equals(0);
+      expect(linkedList.start).to.be.null;
+      expect(linkedList.end).to.be.null;
+    });
   });
 
   describe('shift', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.shift();
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
     });
 
     it('should remove the first element', () => {
@@ -84,31 +116,40 @@ describe('Linked List', () => {
   });
 
   describe('popNode', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.popNode();
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
     });
 
     it('should remove the last element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1, 2, 3, 4, 5]);
+      const linkedList: LinkedList<number> = new LinkedList([1]);
 
       const end = linkedList.end;
       const popped = linkedList.popNode();
 
       expect(end).to.deep.equal(popped);
     });
+
+    it('should remove the final element', () => {
+      const linkedList: LinkedList<number> = new LinkedList([1]);
+      const removed = linkedList.popNode();
+      expect(removed.data).to.equal(1);
+      expect(linkedList.length).equals(0);
+      expect(linkedList.start).to.be.null;
+      expect(linkedList.end).to.be.null;
+    });
   });
 
   describe('pop', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.pop();
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
     });
 
     it('should remove the first element', () => {
@@ -121,12 +162,21 @@ describe('Linked List', () => {
   });
 
   describe('removeNode', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.removeNode(0);
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
+    });
+
+    it('should remove the final element', () => {
+      const linkedList: LinkedList<number> = new LinkedList([1]);
+      const removed = linkedList.removeNode(0);
+      expect(removed.data).to.equal(1);
+      expect(linkedList.length).equals(0);
+      expect(linkedList.start).to.be.null;
+      expect(linkedList.end).to.be.null;
     });
 
     it('should remove the first element', () => {
@@ -155,12 +205,21 @@ describe('Linked List', () => {
   });
 
   describe('remove', () => {
-    it('should throw error if attempting to remove the only element', () => {
-      const linkedList: LinkedList<number> = new LinkedList([1]);
+    it('should throw error if attempting to remove from an empty list', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
 
       assert.throws(() => {
         linkedList.remove(0);
-      }, `Cannot remove the only element in a LinkedList`);
+      }, `Cannot remove from an empty LinkedList`);
+    });
+
+    it('should remove the final element', () => {
+      const linkedList: LinkedList<number> = new LinkedList([1]);
+      const removed = linkedList.remove(0);
+      expect(removed).to.equal(1);
+      expect(linkedList.length).equals(0);
+      expect(linkedList.start).to.be.null;
+      expect(linkedList.end).to.be.null;
     });
 
     it('should remove the first element', () => {
@@ -202,6 +261,14 @@ describe('Linked List', () => {
   });
 
   describe('getNode', () => {
+    it('should throw error if list is empty', () => {
+      const linkedList: LinkedList<number> = new LinkedList([]);
+
+      assert.throws(() => {
+        linkedList.getNode(0);
+      }, `Cannot get from an empty LinkedList`);
+    });
+
     it('should throw error if index is out of range positive', () => {
       const linkedList: LinkedList<number> = new LinkedList([1, 2, 3, 4, 5]);
 
@@ -332,7 +399,7 @@ describe('Linked List', () => {
       for (const number of linkedList) {
         expect(number).to.equal(expectedNumbers[index++]);
       }
-      expect(linkedList.end.data).to.equal(5);
+      expect(linkedList.end!.data).to.equal(5);
     });
 
     it('should insert the element after the specified negative index', () => {
@@ -381,7 +448,7 @@ describe('Linked List', () => {
       for (const number of linkedList) {
         expect(number).to.equal(expectedNumbers[index++]);
       }
-      expect(linkedList.start.data).to.equal(1);
+      expect(linkedList.start!.data).to.equal(1);
     });
 
     it('should insert the element after the specified negative index', () => {

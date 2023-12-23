@@ -8,20 +8,42 @@ export class LinkedListNode<T> {
 }
 
 export class LinkedList<T> implements Iterable<T> {
-  start: LinkedListNode<T>;
-  end: LinkedListNode<T>;
-  length: number;
+  start: LinkedListNode<T> | null = null;
+  end: LinkedListNode<T> | null = null;
+  length: number = 0;
   constructor(data: T[]) {
     if (data.length == 0) {
-      throw new Error('Cannot create a LinkedList with 0 elements');
+      return;
     }
-    const start: LinkedListNode<T> = new LinkedListNode(data[0]);
-    this.start = start;
-    this.end = start;
-    this.length = 1;
+    this.insertFirst(data[0]);
     for (let i = 1; i < data.length; i++) {
       this.insertAtEnd(data[i]);
     }
+  }
+
+  /**
+   * initialized the list again if it had been emptied
+   * @param data
+   */
+  private insertFirst(data: T): void {
+    const start: LinkedListNode<T> = new LinkedListNode(data);
+    this.start = start;
+    this.end = start;
+    this.length = 1;
+  }
+
+  /**
+   * removes the final element in the linked list and removes references to start and end
+   * @returns
+   */
+  private removeLast(): LinkedListNode<T> {
+    const node = this.start!;
+    this.start = null;
+    this.end = null;
+    this.length = 0;
+    node.next = null;
+    node.previous = null;
+    return node;
   }
 
   /**
@@ -29,9 +51,13 @@ export class LinkedList<T> implements Iterable<T> {
    * @param data
    */
   insertAtStart(data: T): void {
+    if (this.length == 0) {
+      this.insertFirst(data);
+      return;
+    }
     const node: LinkedListNode<T> = new LinkedListNode(data);
 
-    this.start.previous = node;
+    this.start!.previous = node;
     node.next = this.start;
     this.start = node;
     this.length++;
@@ -42,9 +68,13 @@ export class LinkedList<T> implements Iterable<T> {
    * @param data
    */
   insertAtEnd(data: T): void {
+    if (this.length == 0) {
+      this.insertFirst(data);
+      return;
+    }
     const node: LinkedListNode<T> = new LinkedListNode(data);
 
-    this.end.next = node;
+    this.end!.next = node;
     node.previous = this.end;
     this.end = node;
     this.length++;
@@ -56,11 +86,13 @@ export class LinkedList<T> implements Iterable<T> {
    * @throws Error if the list only contains one element
    */
   shiftNode(): LinkedListNode<T> {
-    if (this.length == 1) {
-      throw new Error('Cannot remove the only element in a LinkedList');
+    if (this.length == 0) {
+      throw new Error('Cannot remove from an empty LinkedList');
+    } else if (this.length == 1) {
+      return this.removeLast();
     }
-    const node = this.start;
-    this.start = this.start.next!;
+    const node = this.start!;
+    this.start = node.next!;
     this.start.previous = null;
     this.length--;
     return node;
@@ -81,11 +113,13 @@ export class LinkedList<T> implements Iterable<T> {
    * @throws Error if the list only contains one element
    */
   popNode(): LinkedListNode<T> {
-    if (this.length == 1) {
-      throw new Error('Cannot remove the only element in a LinkedList');
+    if (this.length == 0) {
+      throw new Error('Cannot remove from an empty LinkedList');
+    } else if (this.length == 1) {
+      return this.removeLast();
     }
-    const node = this.end;
-    this.end = this.end.previous!;
+    const node = this.end!;
+    this.end = node.previous!;
     this.end.next = null;
     this.length--;
     return node;
@@ -108,13 +142,17 @@ export class LinkedList<T> implements Iterable<T> {
    * @throws Error if out of range or only one element is remaining
    */
   removeNode(index: number): LinkedListNode<T> {
-    if (this.length == 1) {
-      throw new Error('Cannot remove the only element in a LinkedList');
+    if (this.length == 0) {
+      throw new Error('Cannot remove from an empty LinkedList');
     }
     if (index < 0) {
       index = this.length + index;
     }
     let node = this.getNode(index);
+    // doing it here allows getNode to validate the index is in range
+    if (this.length == 1) {
+      return this.removeLast();
+    }
     let previous = node.previous;
     let next = node.next;
     if (previous) {
@@ -164,6 +202,9 @@ export class LinkedList<T> implements Iterable<T> {
    * @throws Error if out of range
    */
   getNode(index: number): LinkedListNode<T> {
+    if (this.length == 0) {
+      throw new Error('Cannot get from an empty LinkedList');
+    }
     if (index > this.length - 1) {
       throw new Error(`${index} is an invalid index for range [0 to ${this.length - 1}]`);
     }
@@ -176,7 +217,7 @@ export class LinkedList<T> implements Iterable<T> {
       index = negativeIndex;
     }
 
-    let node = this.start;
+    let node = this.start!;
     while (index-- > 0) {
       node = node.next!;
     }
