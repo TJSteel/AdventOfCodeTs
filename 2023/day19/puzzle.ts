@@ -137,7 +137,7 @@ class Puzzle extends AbstractPuzzle {
     }
 
     // do some splitting to build a count from 2 paths
-
+    // regex group
     const match = step.match(/(^.*)([\<\>])(.*)\:(.*)/);
     if (!match) {
       throw new Error(`eval regex failed for: ${step}`);
