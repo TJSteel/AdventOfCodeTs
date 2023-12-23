@@ -7,13 +7,34 @@ interface Part {
   a: number;
   s: number;
 }
+interface PartRange {
+  min: number;
+  max: number;
+}
+interface PartRanges {
+  x: PartRange;
+  m: PartRange;
+  a: PartRange;
+  s: PartRange;
+}
+
+const getRangeCount = (ranges: PartRanges): number => {
+  const x = ranges.x.max - ranges.x.min + 1;
+  const m = ranges.m.max - ranges.m.min + 1;
+  const a = ranges.a.max - ranges.a.min + 1;
+  const s = ranges.s.max - ranges.s.min + 1;
+  if (x <= 0 || m <= 0 || a <= 0 || s <= 0) {
+    return 0;
+  }
+  return x * m * a * s;
+};
 
 class Puzzle extends AbstractPuzzle {
   workflows: Map<string, string> = new Map();
   parts: Part[] = [];
 
   setAnswers(): void {
-    super.setAnswers(19114, 397134, 0, 0);
+    super.setAnswers(19114, 397134, 167409079868000, 127517902575337);
   }
 
   parseInput(): void {
@@ -55,7 +76,9 @@ class Puzzle extends AbstractPuzzle {
     const value = match[3];
     const answer = match[4];
 
-    if (eval(`${part[partKey as keyof typeof part]}${operator}${value}`)) {
+    const partValue = part[partKey as keyof typeof part];
+
+    if (eval(`${partValue}${operator}${value}`)) {
       return answer;
     }
 
@@ -86,6 +109,89 @@ class Puzzle extends AbstractPuzzle {
     return false;
   }
 
+  possibleCombinations(key: string, stepIndex: number, ranges: PartRanges): number {
+    switch (key) {
+      case 'A':
+        return getRangeCount(ranges);
+      case 'R':
+        return 0;
+    }
+    const workflow = this.workflows.get(key);
+    if (!workflow) {
+      throw new Error(`workflow ${key} not found`);
+    }
+    const step = workflow.split(',')[stepIndex];
+    if (!step) {
+      throw new Error(`workflow ${key} step ${stepIndex} not found`);
+    }
+
+    switch (step) {
+      case 'A':
+        return getRangeCount(ranges);
+      case 'R':
+        return 0;
+    }
+
+    if (step.indexOf(':') == -1) {
+      return this.possibleCombinations(step, 0, ranges);
+    }
+
+    // do some splitting to build a count from 2 paths
+
+    const match = step.match(/(^.*)([\<\>])(.*)\:(.*)/);
+    if (!match) {
+      throw new Error(`eval regex failed for: ${step}`);
+    }
+    const partKey = match[1] as keyof typeof ranges;
+    const operator = match[2];
+    const value = parseInt(match[3]);
+    const answer = match[4];
+
+    if (operator === '<') {
+      if (ranges[partKey].max < value) {
+        // entire range is accepted
+        return this.possibleCombinations(answer, 0, ranges);
+      } else if (ranges[partKey].min > value) {
+        // entire range is rejected
+        return this.possibleCombinations(key, stepIndex + 1, ranges);
+      } else {
+        // range needs splitting
+        let count = 0;
+        const acceptedRanges = JSON.parse(JSON.stringify(ranges));
+        acceptedRanges[partKey].max = value - 1;
+        const rejectedRanges = JSON.parse(JSON.stringify(ranges));
+        rejectedRanges[partKey].min = value;
+
+        count += this.possibleCombinations(answer, 0, acceptedRanges);
+        count += this.possibleCombinations(key, stepIndex + 1, rejectedRanges);
+        return count;
+      }
+    } else if (operator === '>') {
+      // to inverse of above
+      if (ranges[partKey].min > value) {
+        // entire range is accepted
+        return this.possibleCombinations(answer, 0, ranges);
+      } else if (ranges[partKey].max < value) {
+        // entire range is rejected
+        return this.possibleCombinations(key, stepIndex + 1, ranges);
+      } else {
+        // range needs splitting
+        let count = 0;
+        const acceptedRanges = JSON.parse(JSON.stringify(ranges));
+        acceptedRanges[partKey].min = value + 1;
+        const rejectedRanges = JSON.parse(JSON.stringify(ranges));
+        rejectedRanges[partKey].max = value;
+
+        count += this.possibleCombinations(answer, 0, acceptedRanges);
+        count += this.possibleCombinations(key, stepIndex + 1, rejectedRanges);
+        return count;
+      }
+    } else {
+      throw new Error(`invalid operator: ${operator}`);
+    }
+    throw new Error(`Why am I here?`);
+  }
+
   calculateAnswer1 = (): number => {
     let answer = 0;
     for (let part of this.parts) {
@@ -101,10 +207,15 @@ class Puzzle extends AbstractPuzzle {
   };
 
   calculateAnswer2 = (): number => {
-    let answer = 0;
+    const ranges: PartRanges = {
+      x: { min: 1, max: 4000 },
+      m: { min: 1, max: 4000 },
+      a: { min: 1, max: 4000 },
+      s: { min: 1, max: 4000 },
+    };
 
-    return answer;
+    return this.possibleCombinations('in', 0, ranges);
   };
 }
 
-export const puzzle = new Puzzle('2023', '19', PuzzleStatus.IN_PROGRESS);
+export const puzzle = new Puzzle('2023', '19', PuzzleStatus.COMPLETE);
