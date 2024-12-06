@@ -299,4 +299,13 @@ export class Array2d<T> {
 
     return matched;
   }
+
+  find(predicate: Function): Coordinate2d | null {
+    for (const cell of this) {
+      if (predicate(cell)) {
+        return cell.coord;
+      }
+    }
+    return null;
+  }
 }
