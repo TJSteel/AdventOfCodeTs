@@ -140,13 +140,16 @@ async function buildFile() {
         }
         data = data.join('\n');
       } catch (err) {
-        if (err.response.status === 404) {
+        if (!err.response) {
+          console.log(err.message);
+        } else if (err.response.status === 404) {
           console.log(`Puzzle input not found for ${year} day ${dayInt}`);
           console.log(err.response.data);
         } else {
           console.error(`unknown error occurred with code: ${err.response.status}`);
           console.error(err.response.data);
         }
+        return;
       }
     }
     fs.writeFileSync(inputFile, data, { encoding: 'utf-8' });
