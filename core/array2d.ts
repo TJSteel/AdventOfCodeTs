@@ -270,18 +270,21 @@ export class Array2d<T> {
     });
   }
 
-  public countReachableCells(
+  public getReachableCells(
     predicate: (data: T) => boolean,
     startCoord: Coordinate2d,
     neighbours: Coordinate2d[]
-  ): number {
+  ): Coordinate2d[] {
     if (!this.inRange(startCoord)) {
-      return 0;
+      return [];
     }
     const visited: Set<string> = new Set();
     const queue: Coordinate2d[] = [startCoord];
     visited.add(startCoord.toString());
-    let matched = predicate(this.getCell(startCoord)!) ? 1 : 0;
+    const cellsReached: Coordinate2d[] = [];
+    if (predicate(this.getCell(startCoord)!)) {
+      cellsReached.push(startCoord);
+    }
 
     while (queue.length > 0) {
       const current = queue.pop()!;
@@ -292,12 +295,20 @@ export class Array2d<T> {
         visited.add(neighbour.toString());
         if (predicate(this.getCell(neighbour)!)) {
           queue.push(neighbour);
-          matched++;
+          cellsReached.push(neighbour);
         }
       }
     }
 
-    return matched;
+    return cellsReached;
+  }
+
+  public countReachableCells(
+    predicate: (data: T) => boolean,
+    startCoord: Coordinate2d,
+    neighbours: Coordinate2d[]
+  ): number {
+    return this.getReachableCells(predicate, startCoord, neighbours).length;
   }
 
   find(predicate: Function): Coordinate2d | null {
