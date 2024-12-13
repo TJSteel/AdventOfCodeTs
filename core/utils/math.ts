@@ -1,7 +1,25 @@
 import { Coordinate2d } from '../coordinate2d';
 
+class Triangle {
+  constructor() {
+    throw new Error('Static functions only, do not instantiate');
+  }
+  static getAngle(coord: Coordinate2d): number {
+    return Math.atan2(coord.y, coord.x);
+  }
+  static getAngleDegrees(coord: Coordinate2d): number {
+    return radiansToDegrees(Triangle.getAngle(coord));
+  }
+  static getDistance(coord: Coordinate2d): number {
+    return Math.sqrt(Math.pow(coord.x, 2) + Math.pow(coord.y, 2));
+  }
+}
+
 const triangleNumber = (val: number): number => {
   return (val * (val + 1)) / 2;
+};
+const radiansToDegrees = (radians: number): number => {
+  return radians * (180 / Math.PI);
 };
 const degreesToRadians = (degrees: number): number => {
   return (degrees * Math.PI) / 180;
@@ -46,6 +64,7 @@ const sum = (numbers: number[]): number => {
   return numbers.reduce((a, b) => a + b, 0);
 };
 export const TjMath = {
+  Triangle,
   triangleNumber,
   degreesToRadians,
   isPrime,
