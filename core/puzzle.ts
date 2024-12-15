@@ -25,6 +25,7 @@ export abstract class AbstractPuzzle {
   protected input: any[];
   public status: PuzzleStatus;
   public isTest: boolean = false;
+  public isPart1: boolean = false;
 
   /**
    * Creates a new puzzle for the corresponding year / day
@@ -89,6 +90,7 @@ export abstract class AbstractPuzzle {
     const answer = this.answers[testKey];
 
     this.isTest = name.includes('Test');
+    this.isPart1 = name.includes('1');
     if (answer === -1) {
       Logger.logColor(
         `${this.year} day ${this.day} ${name} skipping (because answer is ${answer})`,

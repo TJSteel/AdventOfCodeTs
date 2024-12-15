@@ -40,7 +40,7 @@ export class Array2d<T> {
     }
   }
 
-  [Symbol.iterator]() {
+  [Symbol.iterator](): { next(): { done: boolean; value: { coord: Coordinate2d; value: T } } } {
     let x = 0;
     let y = 0;
     return {
@@ -311,7 +311,7 @@ export class Array2d<T> {
     return this.getReachableCells(predicate, startCoord, neighbours).length;
   }
 
-  find(predicate: Function): Coordinate2d | null {
+  find(predicate: (param: { value: T; coord: Coordinate2d }) => boolean): Coordinate2d | null {
     for (const cell of this) {
       if (predicate(cell)) {
         return cell.coord;
