@@ -319,4 +319,41 @@ export class Array2d<T> {
     }
     return null;
   }
+
+  getShortestPath(
+    predicate: (data: T) => boolean,
+    startCoord: Coordinate2d,
+    endCoord: Coordinate2d,
+    neighbours: Coordinate2d[]
+  ): Coordinate2d[] | null {
+    if (!this.inRange(startCoord) || !this.inRange(endCoord)) {
+      return [];
+    }
+    const visited: Set<string> = new Set();
+    const queue: { previousCoords: Coordinate2d[]; currentCoord: Coordinate2d }[] = [
+      { previousCoords: [], currentCoord: startCoord },
+    ];
+
+    visited.add(startCoord.toString());
+
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      for (const neighbour of this.getNeighbourGroup(current.currentCoord, neighbours)) {
+        if (visited.has(neighbour.toString())) {
+          continue;
+        }
+        visited.add(neighbour.toString());
+        if (predicate(this.getCell(neighbour)!)) {
+          if (neighbour.equals(endCoord)) {
+            current.previousCoords.push(current.currentCoord);
+            current.previousCoords.push(neighbour);
+            return current.previousCoords;
+          }
+          queue.push({ previousCoords: [...current.previousCoords, current.currentCoord], currentCoord: neighbour });
+        }
+      }
+    }
+
+    return null;
+  }
 }
