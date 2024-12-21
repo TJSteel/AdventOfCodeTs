@@ -51,11 +51,11 @@ export class Coordinate2d {
     return this;
   }
 
-  equals(coord: Coordinate2d) {
+  equals(coord: Coordinate2d): boolean {
     return this.x == coord.x && this.y == coord.y;
   }
 
-  manhattanDistance(coord: Coordinate2d) {
+  manhattanDistance(coord: Coordinate2d): number {
     return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
   }
 }
