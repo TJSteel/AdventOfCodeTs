@@ -77,4 +77,11 @@ export class Coordinate3d {
   manhattanDistance(coord: Coordinate3d) {
     return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y) + Math.abs(this.z - coord.z);
   }
+
+  distance(coord: Coordinate3d): number {
+    const xDiff = Math.pow(Math.abs(this.x - coord.x), 2);
+    const yDiff = Math.pow(Math.abs(this.y - coord.y), 2);
+    const zDiff = Math.pow(Math.abs(this.z - coord.z), 2);
+    return Math.sqrt(xDiff + yDiff + zDiff);
+  }
 }
